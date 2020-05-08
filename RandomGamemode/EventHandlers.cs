@@ -20,7 +20,7 @@ namespace RandomGamemode
 
 		public void OnRoundStart()
 		{
-			if ( rand.Next( 1, 101 ) <= 100 )
+			if ( rand.Next( 1, 101 ) <= 10 )
 			{
 				ChooseGamemode();
 			}
