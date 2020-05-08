@@ -56,6 +56,12 @@ namespace RandomGamemode
 				ev.Player.inventory.AddNewItem( ItemType.SCP018 );
 		}
 
+		public void OnItemDropped( ref DropItemEvent ev )
+		{
+			if ( CurrentGamemode == 1 )
+				ev.Allow = false;
+		}
+
 		public IEnumerator<float> PeanutRaid()
 		{
 			yield return Timing.WaitForSeconds( 3f );
