@@ -14,6 +14,7 @@ namespace RandomGamemode
 			Events.RoundEndEvent += EventHandlers.OnRoundEnd;
 			Events.GrenadeThrownEvent += EventHandlers.OnGrenadeThrown;
 			Events.DropItemEvent += EventHandlers.OnItemDropped;
+			Events.PlayerJoinEvent += EventHandlers.OnPlayerJoin;
 			Log.Info( "Successfully loaded." );
 		}
 
@@ -23,6 +24,7 @@ namespace RandomGamemode
 			Events.RoundEndEvent -= EventHandlers.OnRoundEnd;
 			Events.GrenadeThrownEvent -= EventHandlers.OnGrenadeThrown;
 			Events.DropItemEvent -= EventHandlers.OnItemDropped;
+			Events.PlayerJoinEvent -= EventHandlers.OnPlayerJoin;
 			EventHandlers = null;
 		}
 

@@ -44,6 +44,9 @@
     <Reference Include="EXILED_Events, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>\\SERVER-PC\Users\starw\AppData\Roaming\Plugins\EXILED_Events.dll</HintPath>
     </Reference>
+    <Reference Include="EXILED_Permissions">
+      <HintPath>\\SERVER-PC\Users\starw\AppData\Roaming\Plugins\EXILED_Permissions.dll</HintPath>
+    </Reference>
     <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>\\SERVER-PC\lambda_scp\SCPSL_Data\Managed\Mirror.dll</HintPath>
     </Reference>

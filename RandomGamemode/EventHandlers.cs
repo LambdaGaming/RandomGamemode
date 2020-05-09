@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using EXILED;
 using EXILED.Extensions;
 using MEC;
@@ -12,7 +13,8 @@ namespace RandomGamemode
 		public int CurrentGamemode;
 		public List<KeyValuePair<int, string>> GamemodeList = new List<KeyValuePair<int, string>> {
 			new KeyValuePair<int, string>( 1, "Dodgeball" ),
-			new KeyValuePair<int, string>( 2, "Peanut Raid" )
+			new KeyValuePair<int, string>( 2, "Peanut Raid" ),
+			new KeyValuePair<int, string>( 3, "Goldfish Attacks" )
 		};
 		Random rand = new Random();
 
@@ -33,7 +35,8 @@ namespace RandomGamemode
 			switch ( RandomGamemode )
 			{
 				case 1: Timing.RunCoroutine( DodgeBall() ); break;
-				//case 2: Timing.RunCoroutine( PeanutRaid() ); break;
+				case 2: Timing.RunCoroutine( PeanutRaid() ); break;
+				case 3: Timing.RunCoroutine( GoldfishAttacks() ); break;
 			}
 		}
 
@@ -43,10 +46,12 @@ namespace RandomGamemode
 			foreach ( ReferenceHub hub in Player.GetHubs() )
 			{	
 				yield return Timing.WaitForSeconds( 3f );
-				//hub.SetRole( RoleType.ClassD, hub.gameObject );
+				if ( hub.IsScp() )
+					hub.characterClassManager.SetPlayersClass( RoleType.FacilityGuard, hub.gameObject );
 				hub.inventory.AddNewItem( ItemType.KeycardNTFCommander );
 				for ( int i = 0; i < 7; i++ )
 					hub.inventory.AddNewItem( ItemType.SCP018 );
+				hub.Broadcast( 6, "<color=red>The Dodgeball round has started!</color>" );
 			}
 		}
 
@@ -64,10 +69,47 @@ namespace RandomGamemode
 
 		public IEnumerator<float> PeanutRaid()
 		{
+			List<ReferenceHub> PlyList = new List<ReferenceHub>();
 			yield return Timing.WaitForSeconds( 3f );
 			foreach ( ReferenceHub hub in Player.GetHubs() )
 			{
-				hub.Broadcast( 6, "Peanut raid working" );
+				PlyList.Add( hub );
+				hub.Broadcast( 6, "<color=red>The Peanut Raid round has started!</color>" );
+			}
+			yield return Timing.WaitForSeconds( 1f );
+			int RandPly = rand.Next( 0, PlyList.Count - 1 );
+			ReferenceHub SelectedDBoi = PlyList.ElementAt( RandPly );
+			SelectedDBoi.characterClassManager.SetPlayersClass( RoleType.ClassD, SelectedDBoi.gameObject );
+			SelectedDBoi.SetScale( 0.5f );
+			PlyList.RemoveAt( RandPly );
+			foreach ( ReferenceHub hub in PlyList )
+			{
+				hub.characterClassManager.SetPlayersClass( RoleType.Scp173, hub.gameObject );
+			}
+		}
+
+		public void OnPlayerJoin( PlayerJoinEvent ev )
+		{
+			if ( CurrentGamemode == 2 )
+				ev.Player.characterClassManager.SetPlayersClass( RoleType.Scp173, ev.Player.gameObject );
+		}
+
+		public IEnumerator<float> GoldfishAttacks()
+		{
+			yield return Timing.WaitForSeconds( 3f );
+			string Name = "The Black Goldfish";
+			bool ModeEnabled = false;
+			foreach ( ReferenceHub hub in Player.GetHubs() )
+			{
+				if ( hub.GetNickname() == Name )
+				{
+					hub.characterClassManager.SetPlayersClass( RoleType.Scp079, hub.gameObject );
+					ModeEnabled = true;
+				}
+				if ( ModeEnabled )
+					hub.Broadcast( 6, "<color=red>The Goldfish Attacks round has started!</color>" );
+				else
+					CurrentGamemode = 0;
 			}
 		}
 
