@@ -38,7 +38,7 @@ namespace RandomGamemode
 		public void ChooseGamemode()
 		{
 			int RandomGamemode = rand.Next( 1, 6 );
-			CurrentGamemode = 5;
+			CurrentGamemode = RandomGamemode;
 			switch ( RandomGamemode )
 			{
 				case 1: Timing.RunCoroutine( DodgeBall() ); break;
