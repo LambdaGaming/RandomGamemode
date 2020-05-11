@@ -54,13 +54,14 @@ namespace RandomGamemode
 		{
 			ServerConsole.FriendlyFire = true;
 			foreach ( ReferenceHub hub in Player.GetHubs() )
-			{	
+			{
 				yield return Timing.WaitForSeconds( 3f );
 				if ( hub.IsScp() )
 					hub.characterClassManager.SetPlayersClass( RoleType.FacilityGuard, hub.gameObject );
-				hub.inventory.AddNewItem( ItemType.KeycardNTFCommander );
+				hub.ClearInventory();
 				for ( int i = 0; i < 7; i++ )
 					hub.inventory.AddNewItem( ItemType.SCP018 );
+				hub.SetPosition( Map.GetRandomSpawnPoint( RoleType.Scp106 ) );
 				hub.Broadcast( 6, "<color=red>The Dodgeball round has started!</color>" );
 			}
 		}
