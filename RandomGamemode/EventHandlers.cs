@@ -58,6 +58,7 @@ namespace RandomGamemode
 				yield return Timing.WaitForSeconds( 3f );
 				if ( hub.IsScp() )
 					hub.characterClassManager.SetPlayersClass( RoleType.FacilityGuard, hub.gameObject );
+				yield return Timing.WaitForSeconds( 3f );
 				hub.ClearInventory();
 				for ( int i = 0; i < 7; i++ )
 					hub.inventory.AddNewItem( ItemType.SCP018 );
