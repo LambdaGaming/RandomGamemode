@@ -171,7 +171,7 @@ namespace RandomGamemode
 			yield return Timing.WaitForSeconds( 3f );
 			Selected682.SetPosition( Map.GetRandomSpawnPoint( RoleType.ChaosInsurgency ) );
 			Selected682.SetScale( 2f );
-			Selected682.SetHealth( 5000 );
+			Selected682.SetHealth( 8000 );
 			PlyList.RemoveAt( RandPly );
 			Map.StartNuke();
 			foreach ( ReferenceHub hub in PlyList )
