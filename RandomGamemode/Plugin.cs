@@ -1,35 +1,36 @@
-using System;
-using EXILED;
+using Exiled.API.Enums;
+using Exiled.API.Features;
+using events = Exiled.Events.Handlers;
 
 namespace RandomGamemode
 {
-	public class Plugin : EXILED.Plugin
+	public class Plugin : Plugin<Config>
 	{
-		public EventHandlers EventHandlers;
+		private EventHandlers EventHandlers;
 
-		public override void OnEnable()
+		public override PluginPriority Priority { get; } = PluginPriority.Medium;
+
+		public override void OnEnabled()
 		{
+			base.OnEnabled();
 			EventHandlers = new EventHandlers( this );
-			Events.RoundStartEvent += EventHandlers.OnRoundStart;
-			Events.RoundEndEvent += EventHandlers.OnRoundEnd;
-			Events.GrenadeThrownEvent += EventHandlers.OnGrenadeThrown;
-			Events.DropItemEvent += EventHandlers.OnItemDropped;
-			Events.PlayerJoinEvent += EventHandlers.OnPlayerJoin;
-			Log.Info( "Successfully loaded." );
+			events.Server.RoundStarted += EventHandlers.OnRoundStart;
+			events.Server.RoundEnded += EventHandlers.OnRoundEnd;
+			events.Player.ThrowingGrenade += EventHandlers.OnGrenadeThrown;
+			events.Player.DroppingItem += EventHandlers.OnItemDropped;
+			events.Player.Joined += EventHandlers.OnPlayerJoin;
+			Log.Info( $"Successfully loaded." );
 		}
 
-		public override void OnDisable()
+		public override void OnDisabled()
 		{
-			Events.RoundStartEvent -= EventHandlers.OnRoundStart;
-			Events.RoundEndEvent -= EventHandlers.OnRoundEnd;
-			Events.GrenadeThrownEvent -= EventHandlers.OnGrenadeThrown;
-			Events.DropItemEvent -= EventHandlers.OnItemDropped;
-			Events.PlayerJoinEvent -= EventHandlers.OnPlayerJoin;
+			base.OnDisabled();
+			events.Server.RoundStarted -= EventHandlers.OnRoundStart;
+			events.Server.RoundEnded -= EventHandlers.OnRoundEnd;
+			events.Player.ThrowingGrenade -= EventHandlers.OnGrenadeThrown;
+			events.Player.DroppingItem -= EventHandlers.OnItemDropped;
+			events.Player.Joined -= EventHandlers.OnPlayerJoin;
 			EventHandlers = null;
 		}
-
-		public override void OnReload(){}
-
-		public override string getName { get; } = "Random Gamemode";
 	}
 }

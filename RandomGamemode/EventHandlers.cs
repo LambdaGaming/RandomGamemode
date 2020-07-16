@@ -1,16 +1,16 @@
+﻿using Exiled.API.Enums;
+using Exiled.API.Features;
+using Exiled.Events.EventArgs;
+using MEC;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using EXILED;
-using EXILED.ApiObjects;
-using EXILED.Extensions;
-using MEC;
 
 namespace RandomGamemode
 {
 	public class EventHandlers
 	{
-		public Plugin plugin;
+		private Plugin plugin;
 		public int CurrentGamemode;
 		Random rand = new Random();
 
@@ -18,7 +18,7 @@ namespace RandomGamemode
 
 		public string GetGamemodeName()
 		{
-			switch( CurrentGamemode )
+			switch ( CurrentGamemode )
 			{
 				case 1: return "Dodgeball";
 				case 2: return "Peanut Raid";
@@ -50,145 +50,162 @@ namespace RandomGamemode
 			}
 		}
 
+		public bool IsSCP( Player ply )
+		{
+			RoleType[] SCPs = {
+				RoleType.Scp049,
+				RoleType.Scp0492,
+				RoleType.Scp079,
+				RoleType.Scp096,
+				RoleType.Scp106,
+				RoleType.Scp173,
+				RoleType.Scp93953,
+				RoleType.Scp93989
+			};
+			foreach ( RoleType role in SCPs )
+			{
+				if ( ply.Role == role )
+					return true;
+			}
+			return false;
+		}
+
 		public IEnumerator<float> DodgeBall()
 		{
+			if ( !plugin.Config.DodgeBallEnabled ) yield break;
 			ServerConsole.FriendlyFire = true;
-			foreach ( ReferenceHub hub in Player.GetHubs() )
+			foreach ( Player ply in Player.List )
 			{
 				yield return Timing.WaitForSeconds( 3f );
-				if ( hub.IsScp() )
-					hub.characterClassManager.SetPlayersClass( RoleType.FacilityGuard, hub.gameObject );
+				if ( IsSCP( ply ) )
+					ply.SetRole( RoleType.FacilityGuard );
 				yield return Timing.WaitForSeconds( 3f );
-				hub.ClearInventory();
+				ply.ClearInventory();
 				for ( int i = 0; i < 7; i++ )
-					hub.inventory.AddNewItem( ItemType.SCP018 );
-				hub.SetPosition( Map.GetRandomSpawnPoint( RoleType.Scp106 ) );
-				hub.Broadcast( 6, "<color=red>The Dodgeball round has started!</color>" );
+					ply.Inventory.AddNewItem( ItemType.SCP018 );
+				ply.Position = Map.GetRandomSpawnPoint( RoleType.Scp106 );
 			}
+			Map.Broadcast( 6, "<color=red>The Dodgeball round has started!</color>" );
 		}
 
-		public void OnGrenadeThrown( ref GrenadeThrownEvent ev )
+		public void OnGrenadeThrown( ThrowingGrenadeEventArgs ev )
 		{
 			if ( CurrentGamemode == 1 )
-				ev.Player.inventory.AddNewItem( ItemType.SCP018 );
+				ev.Player.Inventory.AddNewItem( ItemType.SCP018 );
 		}
 
-		public void OnItemDropped( ref DropItemEvent ev )
+		public void OnItemDropped( DroppingItemEventArgs ev )
 		{
 			if ( CurrentGamemode == 1 )
-				ev.Allow = false;
+				ev.IsAllowed = false;
 		}
 
 		public IEnumerator<float> PeanutRaid()
 		{
-			List<ReferenceHub> PlyList = new List<ReferenceHub>();
+			if ( !plugin.Config.PeanutRaidEnabled ) yield break;
+			List<Player> PlyList = new List<Player>();
 			yield return Timing.WaitForSeconds( 3f );
-			foreach ( ReferenceHub hub in Player.GetHubs() )
-			{
-				PlyList.Add( hub );
-				hub.Broadcast( 6, "<color=red>The Peanut Raid round has started!</color>" );
-			}
+			foreach ( Player ply in Player.List )
+				PlyList.Add( ply );
+			Map.Broadcast( 6, "<color=red>The Peanut Raid round has started!</color>" );
+
 			yield return Timing.WaitForSeconds( 1f );
 			int RandPly = rand.Next( 0, PlyList.Count );
-			ReferenceHub SelectedDBoi = PlyList.ElementAt( RandPly );
-			SelectedDBoi.characterClassManager.SetPlayersClass( RoleType.ClassD, SelectedDBoi.gameObject );
-			SelectedDBoi.SetScale( 0.5f );
+			Player SelectedDBoi = PlyList[RandPly];
+			SelectedDBoi.SetRole( RoleType.ClassD );
+			SelectedDBoi.Scale /= 2;
 			PlyList.RemoveAt( RandPly );
-			foreach ( ReferenceHub hub in PlyList )
-			{
-				hub.characterClassManager.SetPlayersClass( RoleType.Scp173, hub.gameObject );
-			}
+			foreach ( Player ply in PlyList )
+				ply.SetRole( RoleType.Scp173 );
 		}
 
-		public void OnPlayerJoin( PlayerJoinEvent ev )
+		public void OnPlayerJoin( JoinedEventArgs ev )
 		{
 			if ( CurrentGamemode == 2 )
-				ev.Player.characterClassManager.SetPlayersClass( RoleType.Scp173, ev.Player.gameObject );
+				ev.Player.SetRole( RoleType.Scp173 );
 		}
 
 		public IEnumerator<float> GoldfishAttacks()
 		{
+			if ( !plugin.Config.GoldfishEnabled ) yield break;
 			yield return Timing.WaitForSeconds( 3f );
 			string Name = "The Black Goldfish";
 			bool ModeEnabled = false;
-			foreach ( ReferenceHub hub in Player.GetHubs() )
+			foreach ( Player ply in Player.List )
 			{
-				if ( hub.GetNickname() == Name )
+				if ( ply.Nickname == Name )
 				{
-					hub.characterClassManager.SetPlayersClass( RoleType.Scp079, hub.gameObject );
+					ply.SetRole( RoleType.Scp079 );
 					ModeEnabled = true;
 				}
-				if ( ModeEnabled )
-					hub.Broadcast( 6, "<color=red>The Goldfish Attacks round has started!</color>" );
 				else
 					CurrentGamemode = 0;
 			}
+			if ( ModeEnabled )
+				Map.Broadcast( 6, "<color=red>The Goldfish Attacks round has started!</color>" );
 		}
 
 		public IEnumerator<float> NightOfTheLivingNerd()
 		{
-			List<ReferenceHub> PlyList = new List<ReferenceHub>();
+			if ( !plugin.Config.LivingNerdEnabled ) yield break;
+			List<Player> PlyList = new List<Player>();
 			yield return Timing.WaitForSeconds( 3f );
-			foreach ( ReferenceHub hub in Player.GetHubs() )
-			{
-				PlyList.Add( hub );
-				hub.Broadcast( 6, "<color=red>The Night of the Living Nerd round has started!</color>" );
-			}
+			foreach ( Player ply in Player.List )
+				PlyList.Add( ply );
+			Map.Broadcast( 6, "<color=red>The Night of the Living Nerd round has started!</color>" );
+
 			yield return Timing.WaitForSeconds( 1f );
 			int RandPly = rand.Next( 0, PlyList.Count );
-			ReferenceHub SelectedNerd = PlyList.ElementAt( RandPly );
-			SelectedNerd.characterClassManager.SetPlayersClass( RoleType.Scientist, SelectedNerd.gameObject );
-			SelectedNerd.inventory.AddNewItem( ItemType.GunLogicer );
-			SelectedNerd.inventory.AddNewItem( ItemType.Flashlight );
-			SelectedNerd.SetAmmo( AmmoType.Dropped7, 1000 );
+			Player SelectedNerd = PlyList[RandPly];
+			SelectedNerd.SetRole( RoleType.Scientist );
+			SelectedNerd.Inventory.AddNewItem( ItemType.GunLogicer );
+			SelectedNerd.Inventory.AddNewItem( ItemType.Flashlight );
+			SelectedNerd.SetAmmo( AmmoType.Nato762, 1000 );
 			PlyList.RemoveAt( RandPly );
 			Map.TurnOffAllLights( 5000 );
-			foreach ( ReferenceHub hub in PlyList )
+			foreach ( Player ply in PlyList )
 			{
-				hub.characterClassManager.SetPlayersClass( RoleType.ClassD, hub.gameObject );
-				hub.inventory.AddNewItem( ItemType.Flashlight );
+				ply.SetRole( RoleType.ClassD );
+				ply.Inventory.AddNewItem( ItemType.Flashlight );
 			}
 		}
 
 		public IEnumerator<float> SCP682Containment()
 		{
-			List<ReferenceHub> PlyList = new List<ReferenceHub>();
+			if ( !plugin.Config.SCP682ContainmentEnabled ) yield break;
+			List<Player> PlyList = new List<Player>();
 			yield return Timing.WaitForSeconds( 3f );
-			if ( Player.GetHubs().Count() < 3 ) // The round ends too early if there's only 2 players
+			if ( Player.List.Count() < 3 ) // The round ends too early if there's only 2 players
 			{
 				CurrentGamemode = 0;
 				yield break;
 			}
-			foreach ( ReferenceHub hub in Player.GetHubs() )
-			{
-				PlyList.Add( hub );
-				hub.Broadcast( 6, "<color=red>The SCP-682 Containment round has started!</color>" );
-			}
+			foreach ( Player ply in Player.List )
+				PlyList.Add( ply );
+			Map.Broadcast( 6, "<color=red>The SCP-682 Containment round has started!</color>" );
+
 			yield return Timing.WaitForSeconds( 1f );
 			int RandPly = rand.Next( 0, PlyList.Count );
-			ReferenceHub Selected682 = PlyList.ElementAt( RandPly );
-			Selected682.characterClassManager.SetPlayersClass( RoleType.Scp93953, Selected682.gameObject );
+			Player Selected682 = PlyList[RandPly];
+			Selected682.SetRole( RoleType.Scp93953 );
 			yield return Timing.WaitForSeconds( 3f );
-			Selected682.SetPosition( Map.GetRandomSpawnPoint( RoleType.ChaosInsurgency ) );
-			Selected682.SetScale( 2f );
-			Selected682.SetHealth( 8000 );
+			Selected682.Position = Map.GetRandomSpawnPoint( RoleType.ChaosInsurgency );
+			Selected682.Scale *= 2;
+			Selected682.Health = 8000;
 			PlyList.RemoveAt( RandPly );
-			Map.StartNuke();
-			foreach ( ReferenceHub hub in PlyList )
+			Warhead.Start();
+			foreach ( Player ply in PlyList )
 			{
-				hub.characterClassManager.SetPlayersClass( RoleType.NtfCommander, hub.gameObject );
-				hub.SetAmmo( AmmoType.Dropped5, 1000 );
+				ply.SetRole( RoleType.NtfCommander );
+				ply.SetAmmo( AmmoType.Nato556, 1000 );
 			}
 		}
 
-		public void OnRoundEnd()
+		public void OnRoundEnd( RoundEndedEventArgs ev )
 		{
 			if ( CurrentGamemode > 0 )
 			{
-				foreach ( ReferenceHub hub in Player.GetHubs() )
-				{
-					hub.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has ended.</color>" );
-				}
+				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has ended.</color>" );
 				CurrentGamemode = 0;
 				ServerConsole.FriendlyFire = false;
 			}
