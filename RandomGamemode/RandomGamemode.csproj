@@ -34,23 +34,23 @@
   <ItemGroup>
     <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>\\server-pc\lambda_scp_test\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>\\server-pc\lambda_scp\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-Publicized">
       <HintPath>..\..\EXILED\Refs\Assembly-CSharp-Publicized.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.API">
-      <HintPath>\\server-pc\Users\starw\AppData\Roaming\EXILED-PTB\Plugins\dependencies\Exiled.API.dll</HintPath>
+      <HintPath>\\server-pc\Users\starw\AppData\Roaming\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.Events">
-      <HintPath>\\server-pc\Users\starw\AppData\Roaming\EXILED-PTB\Plugins\Exiled.Events.dll</HintPath>
+      <HintPath>\\server-pc\Users\starw\AppData\Roaming\EXILED\Plugins\Exiled.Events.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.Loader">
-      <HintPath>\\server-pc\Users\starw\AppData\Roaming\EXILED-PTB\Exiled.Loader.dll</HintPath>
+      <HintPath>\\server-pc\Users\starw\AppData\Roaming\EXILED\Exiled.Loader.dll</HintPath>
     </Reference>
     <Reference Include="Mirror, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>\\server-pc\lambda_scp_test\SCPSL_Data\Managed\Mirror.dll</HintPath>
+      <HintPath>\\server-pc\lambda_scp\SCPSL_Data\Managed\Mirror.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
