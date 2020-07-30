@@ -31,7 +31,7 @@ namespace RandomGamemode
 
 		public void OnRoundStart()
 		{
-			if ( rand.Next( 1, 101 ) <= 10 )
+			if ( rand.Next( 1, 101 ) <= plugin.Config.GamemodeChance )
 				ChooseGamemode();
 		}
 
@@ -46,7 +46,7 @@ namespace RandomGamemode
 				case 3: Timing.RunCoroutine( GoldfishAttacks() ); break;
 				case 4: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
 				case 5: Timing.RunCoroutine( SCP682Containment() ); break;
-				//default: Timing.RunCoroutine( SCP682Containment() ); break; // Used for debugging a single gamemode
+				//default: Timing.RunCoroutine( PeanutRaid() ); break; // Used for debugging a single gamemode
 			}
 		}
 
@@ -113,10 +113,11 @@ namespace RandomGamemode
 			int RandPly = rand.Next( 0, PlyList.Count );
 			Player SelectedDBoi = PlyList[RandPly];
 			SelectedDBoi.SetRole( RoleType.ClassD );
-			SelectedDBoi.Scale /= 2;
 			PlyList.RemoveAt( RandPly );
 			foreach ( Player ply in PlyList )
 				ply.SetRole( RoleType.Scp173 );
+			yield return Timing.WaitForSeconds( 0.5f );
+			SelectedDBoi.Scale /= 2;
 		}
 
 		public void OnPlayerJoin( JoinedEventArgs ev )
