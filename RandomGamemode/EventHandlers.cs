@@ -192,6 +192,7 @@ namespace RandomGamemode
 			yield return Timing.WaitForSeconds( 3f );
 			Selected682.Position = Map.GetRandomSpawnPoint( RoleType.ChaosInsurgency );
 			Selected682.Scale *= 2;
+			Selected682.MaxHealth = 8000;
 			Selected682.Health = 8000;
 			PlyList.RemoveAt( RandPly );
 			Warhead.Start();
