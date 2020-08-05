@@ -8,5 +8,4 @@
 - <u>SCP-682 Containment:</u> Based off of some of the endings of SCP:Containment Breach. All players spawn as NTF Commander besides 1 randomly chosen player, who spawns as a huge SCP-939 with 5000 HP. All players spawn topside as the nuke goes off. NTF has to kill the SCP before being killed themselves.
 
 ## Notes:
-- If you have friendly fire enabled on your server, I don't recommend using this plugin as it currently resets friendly fire settings after every round.
 - See your EXILED config for options to enable/disable specific gamemodes. (Make sure you run the server at least once with the plugin so the configs generate.)
