@@ -46,7 +46,7 @@ namespace RandomGamemode
 				case 3: Timing.RunCoroutine( GoldfishAttacks() ); break;
 				case 4: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
 				case 5: Timing.RunCoroutine( SCP682Containment() ); break;
-				//default: Timing.RunCoroutine( PeanutRaid() ); break; // Used for debugging a single gamemode
+				//default: Timing.RunCoroutine( SCP682Containment() ); break; // Used for debugging a single gamemode
 			}
 		}
 
@@ -191,7 +191,7 @@ namespace RandomGamemode
 			Selected682.SetRole( RoleType.Scp93953 );
 			yield return Timing.WaitForSeconds( 3f );
 			Selected682.Position = Map.GetRandomSpawnPoint( RoleType.ChaosInsurgency );
-			Selected682.Scale *= 2;
+			Selected682.Scale *= 1.75f;
 			Selected682.MaxHealth = 8000;
 			Selected682.Health = 8000;
 			PlyList.RemoveAt( RandPly );
