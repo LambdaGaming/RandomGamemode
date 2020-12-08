@@ -13,6 +13,7 @@ namespace RandomGamemode
 		private Plugin plugin;
 		public int CurrentGamemode;
 		public bool FriendlyFireDefault;
+		private int TotalBalls = 0;
 		Random rand = new Random();
 
 		public EventHandlers( Plugin plugin ) => this.plugin = plugin;
@@ -73,7 +74,22 @@ namespace RandomGamemode
 		public void OnGrenadeThrown( ThrowingGrenadeEventArgs ev )
 		{
 			if ( CurrentGamemode == 1 )
-				ev.Player.Inventory.AddNewItem( ItemType.SCP018 );
+			{
+				if ( TotalBalls >= 20 )
+					ev.IsAllowed = false;
+
+				if ( ev.IsAllowed )
+				{
+					ev.Player.Inventory.AddNewItem( ItemType.SCP018 );
+					TotalBalls++;
+				}
+			}
+		}
+
+		public void OnGrenadeExplode( ExplodingGrenadeEventArgs ev )
+		{
+			if ( CurrentGamemode == 1 )
+				TotalBalls--;
 		}
 
 		public void OnItemDropped( DroppingItemEventArgs ev )
@@ -192,6 +208,7 @@ namespace RandomGamemode
 			{
 				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has ended.</color>" );
 				CurrentGamemode = 0;
+				TotalBalls = 0;
 				if ( !FriendlyFireDefault )
 					ServerConsole.FriendlyFire = false;
 			}

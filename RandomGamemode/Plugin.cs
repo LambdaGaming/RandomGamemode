@@ -19,6 +19,7 @@ namespace RandomGamemode
 			events.Server.RoundStarted += EventHandlers.OnRoundStart;
 			events.Server.RoundEnded += EventHandlers.OnRoundEnd;
 			events.Player.ThrowingGrenade += EventHandlers.OnGrenadeThrown;
+			events.Map.ExplodingGrenade += EventHandlers.OnGrenadeExplode;
 			events.Player.DroppingItem += EventHandlers.OnItemDropped;
 			events.Player.Joined += EventHandlers.OnPlayerJoin;
 
@@ -46,6 +47,7 @@ namespace RandomGamemode
 			events.Server.RoundStarted -= EventHandlers.OnRoundStart;
 			events.Server.RoundEnded -= EventHandlers.OnRoundEnd;
 			events.Player.ThrowingGrenade -= EventHandlers.OnGrenadeThrown;
+			events.Map.ExplodingGrenade -= EventHandlers.OnGrenadeExplode;
 			events.Player.DroppingItem -= EventHandlers.OnItemDropped;
 			events.Player.Joined -= EventHandlers.OnPlayerJoin;
 			EventHandlers = null;
