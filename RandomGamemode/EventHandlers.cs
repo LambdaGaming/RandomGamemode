@@ -38,7 +38,7 @@ namespace RandomGamemode
 
 		public void ChooseGamemode()
 		{
-			int RandomGamemode = rand.Next( 1, 6 );
+			int RandomGamemode = Plugin.EnabledList[rand.Next( 0, Plugin.EnabledList.Count )];
 			CurrentGamemode = RandomGamemode;
 			switch ( RandomGamemode )
 			{
@@ -47,28 +47,7 @@ namespace RandomGamemode
 				case 3: Timing.RunCoroutine( GoldfishAttacks() ); break;
 				case 4: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
 				case 5: Timing.RunCoroutine( SCP682Containment() ); break;
-				//default: Timing.RunCoroutine( SCP682Containment() ); break; // Used for debugging a single gamemode
 			}
-		}
-
-		public bool IsSCP( Player ply )
-		{
-			RoleType[] SCPs = {
-				RoleType.Scp049,
-				RoleType.Scp0492,
-				RoleType.Scp079,
-				RoleType.Scp096,
-				RoleType.Scp106,
-				RoleType.Scp173,
-				RoleType.Scp93953,
-				RoleType.Scp93989
-			};
-			foreach ( RoleType role in SCPs )
-			{
-				if ( ply.Role == role )
-					return true;
-			}
-			return false;
 		}
 
 		public IEnumerator<float> DodgeBall()
@@ -77,12 +56,12 @@ namespace RandomGamemode
 			if ( ServerConsole.FriendlyFire )
 				FriendlyFireDefault = true;
 			ServerConsole.FriendlyFire = true;
+			yield return Timing.WaitForSeconds( 3f );
 			foreach ( Player ply in Player.List )
 			{
-				yield return Timing.WaitForSeconds( 3f );
-				if ( IsSCP( ply ) )
+				if ( ply.IsScp )
 					ply.SetRole( RoleType.FacilityGuard );
-				yield return Timing.WaitForSeconds( 3f );
+				yield return Timing.WaitForSeconds( 0.5f );
 				ply.ClearInventory();
 				for ( int i = 0; i < 7; i++ )
 					ply.Inventory.AddNewItem( ItemType.SCP018 );
@@ -164,13 +143,14 @@ namespace RandomGamemode
 			SelectedNerd.SetRole( RoleType.Scientist );
 			SelectedNerd.Inventory.AddNewItem( ItemType.GunLogicer );
 			SelectedNerd.Inventory.AddNewItem( ItemType.Flashlight );
-			SelectedNerd.SetAmmo( AmmoType.Nato762, 1000 );
+			SelectedNerd.Ammo[( int ) AmmoType.Nato762] = 1000;
 			PlyList.RemoveAt( RandPly );
 			Map.TurnOffAllLights( 5000 );
 			foreach ( Player ply in PlyList )
 			{
 				ply.SetRole( RoleType.ClassD );
 				ply.Inventory.AddNewItem( ItemType.Flashlight );
+				ply.Inventory.AddNewItem( ItemType.SCP268 );
 			}
 		}
 
@@ -202,7 +182,7 @@ namespace RandomGamemode
 			foreach ( Player ply in PlyList )
 			{
 				ply.SetRole( RoleType.NtfCommander );
-				ply.SetAmmo( AmmoType.Nato556, 1000 );
+				ply.Ammo[( int ) AmmoType.Nato556] = 1000;
 			}
 		}
 
