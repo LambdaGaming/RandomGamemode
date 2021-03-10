@@ -75,7 +75,7 @@ namespace RandomGamemode
 		{
 			if ( CurrentGamemode == 1 )
 			{
-				if ( TotalBalls >= 20 )
+				if ( TotalBalls >= plugin.Config.MaxDodgeballs )
 					ev.IsAllowed = false;
 
 				if ( ev.IsAllowed )
@@ -159,7 +159,7 @@ namespace RandomGamemode
 			SelectedNerd.SetRole( RoleType.Scientist );
 			SelectedNerd.Inventory.AddNewItem( ItemType.GunLogicer );
 			SelectedNerd.Inventory.AddNewItem( ItemType.Flashlight );
-			SelectedNerd.Ammo[( int ) AmmoType.Nato762] = 1000;
+			SelectedNerd.Ammo[( int ) AmmoType.Nato762] = plugin.Config.NerdAmmoAmount;
 			PlyList.RemoveAt( RandPly );
 			Map.TurnOffAllLights( 5000 );
 			foreach ( Player ply in PlyList )
@@ -191,14 +191,14 @@ namespace RandomGamemode
 			yield return Timing.WaitForSeconds( 3f );
 			Selected682.Position = Map.GetRandomSpawnPoint( RoleType.ChaosInsurgency );
 			Selected682.Scale *= 1.75f;
-			Selected682.MaxHealth = 8000;
-			Selected682.Health = 8000;
+			Selected682.MaxHealth = plugin.Config.SCP682Health;
+			Selected682.Health = plugin.Config.SCP682Health;
 			PlyList.RemoveAt( RandPly );
 			Warhead.Start();
 			foreach ( Player ply in PlyList )
 			{
 				ply.SetRole( RoleType.NtfCommander );
-				ply.Ammo[( int ) AmmoType.Nato556] = 1000;
+				ply.Ammo[( int ) AmmoType.Nato556] = plugin.Config.SCP682MTFAmmo;
 			}
 		}
 
