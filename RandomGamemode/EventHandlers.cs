@@ -34,7 +34,9 @@ namespace RandomGamemode
 		public void OnRoundStart()
 		{
 			if ( rand.Next( 1, 101 ) <= plugin.Config.GamemodeChance )
+			{
 				ChooseGamemode();
+			}
 		}
 
 		public void ChooseGamemode()
@@ -54,20 +56,33 @@ namespace RandomGamemode
 		public IEnumerator<float> DodgeBall()
 		{
 			if ( !plugin.Config.DodgeBallEnabled ) yield break;
+
 			if ( ServerConsole.FriendlyFire )
+			{
 				FriendlyFireDefault = true;
+			}
+
 			ServerConsole.FriendlyFire = true;
 			yield return Timing.WaitForSeconds( 3f );
+
 			foreach ( Player ply in Player.List )
 			{
 				if ( ply.IsScp )
+				{
 					ply.SetRole( RoleType.FacilityGuard );
+				}
+
 				yield return Timing.WaitForSeconds( 0.5f );
 				ply.ClearInventory();
+
 				for ( int i = 0; i < 7; i++ )
+				{
 					ply.Inventory.AddNewItem( ItemType.SCP018 );
+				}
+
 				ply.Position = Map.GetRandomSpawnPoint( RoleType.Scp106 );
 			}
+
 			Map.Broadcast( 6, "<color=red>The Dodgeball round has started!</color>" );
 		}
 
@@ -76,7 +91,9 @@ namespace RandomGamemode
 			if ( CurrentGamemode == 1 )
 			{
 				if ( TotalBalls >= plugin.Config.MaxDodgeballs )
+				{
 					ev.IsAllowed = false;
+				}
 
 				if ( ev.IsAllowed )
 				{
@@ -89,31 +106,43 @@ namespace RandomGamemode
 		public void OnGrenadeExplode( ExplodingGrenadeEventArgs ev )
 		{
 			if ( CurrentGamemode == 1 )
+			{
 				TotalBalls--;
+			}
 		}
 
 		public void OnItemDropped( DroppingItemEventArgs ev )
 		{
 			if ( CurrentGamemode == 1 )
+			{
 				ev.IsAllowed = false;
+			}
 		}
 
 		public IEnumerator<float> PeanutRaid()
 		{
 			if ( !plugin.Config.PeanutRaidEnabled ) yield break;
+
 			List<Player> PlyList = new List<Player>();
 			yield return Timing.WaitForSeconds( 3f );
-			foreach ( Player ply in Player.List )
-				PlyList.Add( ply );
-			Map.Broadcast( 6, "<color=red>The Peanut Raid round has started!</color>" );
 
+			foreach ( Player ply in Player.List )
+			{
+				PlyList.Add( ply );
+			}
+
+			Map.Broadcast( 6, "<color=red>The Peanut Raid round has started!</color>" );
 			yield return Timing.WaitForSeconds( 1f );
 			int RandPly = rand.Next( 0, PlyList.Count );
 			Player SelectedDBoi = PlyList[RandPly];
 			SelectedDBoi.SetRole( RoleType.ClassD );
 			PlyList.RemoveAt( RandPly );
+
 			foreach ( Player ply in PlyList )
+			{
 				ply.SetRole( RoleType.Scp173 );
+			}
+
 			yield return Timing.WaitForSeconds( 0.5f );
 			SelectedDBoi.Scale /= 2;
 		}
@@ -121,15 +150,19 @@ namespace RandomGamemode
 		public void OnPlayerJoin( JoinedEventArgs ev )
 		{
 			if ( CurrentGamemode == 2 )
+			{
 				ev.Player.SetRole( RoleType.Scp173 );
+			}
 		}
 
 		public IEnumerator<float> GoldfishAttacks()
 		{
 			if ( !plugin.Config.GoldfishEnabled ) yield break;
+
 			yield return Timing.WaitForSeconds( 3f );
 			string Name = "The Black Goldfish";
 			bool ModeEnabled = false;
+
 			foreach ( Player ply in Player.List )
 			{
 				if ( ply.Nickname == Name )
@@ -138,21 +171,30 @@ namespace RandomGamemode
 					ModeEnabled = true;
 				}
 				else
+				{
 					CurrentGamemode = 0;
+				}
 			}
+
 			if ( ModeEnabled )
+			{
 				Map.Broadcast( 6, "<color=red>The Goldfish Attacks round has started!</color>" );
+			}
 		}
 
 		public IEnumerator<float> NightOfTheLivingNerd()
 		{
 			if ( !plugin.Config.LivingNerdEnabled ) yield break;
+
 			List<Player> PlyList = new List<Player>();
 			yield return Timing.WaitForSeconds( 3f );
-			foreach ( Player ply in Player.List )
-				PlyList.Add( ply );
-			Map.Broadcast( 6, "<color=red>The Night of the Living Nerd round has started!</color>" );
 
+			foreach ( Player ply in Player.List )
+			{
+				PlyList.Add( ply );
+			}
+
+			Map.Broadcast( 6, "<color=red>The Night of the Living Nerd round has started!</color>" );
 			yield return Timing.WaitForSeconds( 1f );
 			int RandPly = rand.Next( 0, PlyList.Count );
 			Player SelectedNerd = PlyList[RandPly];
@@ -162,6 +204,7 @@ namespace RandomGamemode
 			SelectedNerd.Ammo[( int ) AmmoType.Nato762] = plugin.Config.NerdAmmoAmount;
 			PlyList.RemoveAt( RandPly );
 			Map.TurnOffAllLights( 5000 );
+
 			foreach ( Player ply in PlyList )
 			{
 				ply.SetRole( RoleType.ClassD );
@@ -173,17 +216,22 @@ namespace RandomGamemode
 		public IEnumerator<float> SCP682Containment()
 		{
 			if ( !plugin.Config.SCP682ContainmentEnabled ) yield break;
+
 			List<Player> PlyList = new List<Player>();
 			yield return Timing.WaitForSeconds( 3f );
+
 			if ( Player.List.Count() < 3 ) // The round ends too early if there's only 2 players
 			{
 				CurrentGamemode = 0;
 				yield break;
 			}
-			foreach ( Player ply in Player.List )
-				PlyList.Add( ply );
-			Map.Broadcast( 6, "<color=red>The SCP-682 Containment round has started!</color>" );
 
+			foreach ( Player ply in Player.List )
+			{
+				PlyList.Add( ply );
+			}
+
+			Map.Broadcast( 6, "<color=red>The SCP-682 Containment round has started!</color>" );
 			yield return Timing.WaitForSeconds( 1f );
 			int RandPly = rand.Next( 0, PlyList.Count );
 			Player Selected682 = PlyList[RandPly];
@@ -195,6 +243,7 @@ namespace RandomGamemode
 			Selected682.Health = plugin.Config.SCP682Health;
 			PlyList.RemoveAt( RandPly );
 			Warhead.Start();
+
 			foreach ( Player ply in PlyList )
 			{
 				ply.SetRole( RoleType.NtfCommander );
@@ -210,7 +259,9 @@ namespace RandomGamemode
 				CurrentGamemode = 0;
 				TotalBalls = 0;
 				if ( !FriendlyFireDefault )
+				{
 					ServerConsole.FriendlyFire = false;
+				}
 			}
 		}
 	}
