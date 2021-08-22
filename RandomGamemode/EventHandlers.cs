@@ -1,4 +1,4 @@
-﻿using Exiled.API.Enums;
+﻿using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using MEC;
@@ -77,16 +77,16 @@ namespace RandomGamemode
 
 				for ( int i = 0; i < 7; i++ )
 				{
-					ply.Inventory.AddNewItem( ItemType.SCP018 );
+					ply.AddItem( Exiled.API.Enums.ItemType.Scp018 );
 				}
 
-				ply.Position = Map.GetRandomSpawnPoint( RoleType.Scp106 );
+				ply.Position = RoleExtensions.GetRandomSpawnProperties( RoleType.Scp106 ).Item1;
 			}
 
 			Map.Broadcast( 6, "<color=red>The Dodgeball round has started!</color>" );
 		}
 
-		public void OnGrenadeThrown( ThrowingGrenadeEventArgs ev )
+		public void OnGrenadeThrown( ThrowingItemEventArgs ev )
 		{
 			if ( CurrentGamemode == 1 )
 			{
@@ -97,7 +97,7 @@ namespace RandomGamemode
 
 				if ( ev.IsAllowed )
 				{
-					ev.Player.Inventory.AddNewItem( ItemType.SCP018 );
+					ev.Player.AddItem( Exiled.API.Enums.ItemType.Scp018 );
 					TotalBalls++;
 				}
 			}
@@ -199,17 +199,17 @@ namespace RandomGamemode
 			int RandPly = rand.Next( 0, PlyList.Count );
 			Player SelectedNerd = PlyList[RandPly];
 			SelectedNerd.SetRole( RoleType.Scientist );
-			SelectedNerd.Inventory.AddNewItem( ItemType.GunLogicer );
-			SelectedNerd.Inventory.AddNewItem( ItemType.Flashlight );
-			SelectedNerd.Ammo[( int ) AmmoType.Nato762] = plugin.Config.NerdAmmoAmount;
+			SelectedNerd.AddItem( Exiled.API.Enums.ItemType.GunLogicer );
+			SelectedNerd.AddItem( Exiled.API.Enums.ItemType.Flashlight );
+			SelectedNerd.Ammo[ItemType.Ammo762x39] = plugin.Config.NerdAmmoAmount;
 			PlyList.RemoveAt( RandPly );
 			Map.TurnOffAllLights( 5000 );
 
 			foreach ( Player ply in PlyList )
 			{
 				ply.SetRole( RoleType.ClassD );
-				ply.Inventory.AddNewItem( ItemType.Flashlight );
-				ply.Inventory.AddNewItem( ItemType.SCP268 );
+				ply.AddItem( Exiled.API.Enums.ItemType.Flashlight );
+				ply.AddItem( Exiled.API.Enums.ItemType.Scp268 );
 			}
 		}
 
@@ -237,7 +237,7 @@ namespace RandomGamemode
 			Player Selected682 = PlyList[RandPly];
 			Selected682.SetRole( RoleType.Scp93953 );
 			yield return Timing.WaitForSeconds( 3f );
-			Selected682.Position = Map.GetRandomSpawnPoint( RoleType.ChaosInsurgency );
+			Selected682.Position = RoleExtensions.GetRandomSpawnProperties( RoleType.ChaosConscript ).Item1;
 			Selected682.Scale *= 1.75f;
 			Selected682.MaxHealth = plugin.Config.SCP682Health;
 			Selected682.Health = plugin.Config.SCP682Health;
@@ -246,8 +246,8 @@ namespace RandomGamemode
 
 			foreach ( Player ply in PlyList )
 			{
-				ply.SetRole( RoleType.NtfCommander );
-				ply.Ammo[( int ) AmmoType.Nato556] = plugin.Config.SCP682MTFAmmo;
+				ply.SetRole( RoleType.NtfCaptain );
+				ply.Ammo[ItemType.Ammo556x45] = plugin.Config.SCP682MTFAmmo;
 			}
 		}
 

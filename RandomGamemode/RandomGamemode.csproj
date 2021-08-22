@@ -32,15 +32,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>\\server-pc\Servers\lambda_scp\SCPSL_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>\\server-pc\lambda_scp\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp-Publicized">
-      <HintPath>..\..\EXILED\Refs\Assembly-CSharp-Publicized.dll</HintPath>
-    </Reference>
     <Reference Include="Exiled.API">
       <HintPath>\\server-pc\Users\starw\AppData\Roaming\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.CreditTags">
+      <HintPath>\\server-pc\Users\starw\AppData\Roaming\EXILED\Plugins\Exiled.CreditTags.dll</HintPath>
+    </Reference>
+    <Reference Include="Exiled.CustomItems">
+      <HintPath>\\server-pc\Users\starw\AppData\Roaming\EXILED\Plugins\Exiled.CustomItems.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.Events">
       <HintPath>\\server-pc\Users\starw\AppData\Roaming\EXILED\Plugins\Exiled.Events.dll</HintPath>
