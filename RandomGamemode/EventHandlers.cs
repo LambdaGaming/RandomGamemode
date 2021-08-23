@@ -77,7 +77,7 @@ namespace RandomGamemode
 
 				for ( int i = 0; i < 7; i++ )
 				{
-					ply.AddItem( Exiled.API.Enums.ItemType.Scp018 );
+					ply.AddItem( ItemType.SCP018 );
 				}
 
 				ply.Position = RoleExtensions.GetRandomSpawnProperties( RoleType.Scp106 ).Item1;
@@ -97,7 +97,7 @@ namespace RandomGamemode
 
 				if ( ev.IsAllowed )
 				{
-					ev.Player.AddItem( Exiled.API.Enums.ItemType.Scp018 );
+					ev.Player.AddItem( ItemType.SCP018 );
 					TotalBalls++;
 				}
 			}
@@ -199,8 +199,8 @@ namespace RandomGamemode
 			int RandPly = rand.Next( 0, PlyList.Count );
 			Player SelectedNerd = PlyList[RandPly];
 			SelectedNerd.SetRole( RoleType.Scientist );
-			SelectedNerd.AddItem( Exiled.API.Enums.ItemType.GunLogicer );
-			SelectedNerd.AddItem( Exiled.API.Enums.ItemType.Flashlight );
+			SelectedNerd.AddItem( ItemType.GunLogicer );
+			SelectedNerd.AddItem( ItemType.Flashlight );
 			SelectedNerd.Ammo[ItemType.Ammo762x39] = plugin.Config.NerdAmmoAmount;
 			PlyList.RemoveAt( RandPly );
 			Map.TurnOffAllLights( 5000 );
@@ -208,8 +208,8 @@ namespace RandomGamemode
 			foreach ( Player ply in PlyList )
 			{
 				ply.SetRole( RoleType.ClassD );
-				ply.AddItem( Exiled.API.Enums.ItemType.Flashlight );
-				ply.AddItem( Exiled.API.Enums.ItemType.Scp268 );
+				ply.AddItem( ItemType.Flashlight );
+				ply.AddItem( ItemType.SCP268 );
 			}
 		}
 
