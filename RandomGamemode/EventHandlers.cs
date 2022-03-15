@@ -12,7 +12,7 @@ namespace RandomGamemode
 	{
 		private Plugin plugin;
 		public int CurrentGamemode;
-		public bool FriendlyFireDefault;
+		private bool FriendlyFireDefault;
 		private int TotalBalls = 0;
 		Random rand = new Random();
 
@@ -57,11 +57,7 @@ namespace RandomGamemode
 		{
 			if ( !plugin.Config.DodgeBallEnabled ) yield break;
 
-			if ( ServerConsole.FriendlyFire )
-			{
-				FriendlyFireDefault = true;
-			}
-
+			FriendlyFireDefault = ServerConsole.FriendlyFire;
 			ServerConsole.FriendlyFire = true;
 			yield return Timing.WaitForSeconds( 3f );
 
@@ -258,10 +254,7 @@ namespace RandomGamemode
 				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has ended.</color>" );
 				CurrentGamemode = 0;
 				TotalBalls = 0;
-				if ( !FriendlyFireDefault )
-				{
-					ServerConsole.FriendlyFire = false;
-				}
+				ServerConsole.FriendlyFire = FriendlyFireDefault;
 			}
 		}
 	}
