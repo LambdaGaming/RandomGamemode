@@ -1,4 +1,5 @@
-﻿using Exiled.API.Extensions;
+﻿using Exiled.API.Enums;
+using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
 using MEC;
@@ -197,7 +198,10 @@ namespace RandomGamemode
 			SelectedNerd.SetRole( RoleType.Scientist );
 			SelectedNerd.AddItem( ItemType.GunLogicer );
 			SelectedNerd.AddItem( ItemType.Flashlight );
-			SelectedNerd.Ammo[ItemType.Ammo762x39] = plugin.Config.NerdAmmoAmount;
+			SelectedNerd.SetAmmo( AmmoType.Nato762, plugin.Config.NerdAmmoAmount );
+			SelectedNerd.Position = RoleExtensions.GetRandomSpawnProperties( RoleType.Scp93953 ).Item1;
+			SelectedNerd.EnableEffect( EffectType.Scp207 );
+			SelectedNerd.EnableEffect( EffectType.Deafened );
 			PlyList.RemoveAt( RandPly );
 			Map.TurnOffAllLights( 5000 );
 
