@@ -52,12 +52,11 @@ namespace RandomGamemode
 				case 4: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
 				case 5: Timing.RunCoroutine( SCP682Containment() ); break;
 			}
+			Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has started!</color>" );
 		}
 
 		public IEnumerator<float> DodgeBall()
 		{
-			if ( !plugin.Config.DodgeBallEnabled ) yield break;
-
 			FriendlyFireDefault = ServerConsole.FriendlyFire;
 			ServerConsole.FriendlyFire = true;
 			yield return Timing.WaitForSeconds( 3f );
@@ -79,8 +78,6 @@ namespace RandomGamemode
 
 				ply.Position = RoleExtensions.GetRandomSpawnProperties( RoleType.Scp106 ).Item1;
 			}
-
-			Map.Broadcast( 6, "<color=red>The Dodgeball round has started!</color>" );
 		}
 
 		public void OnGrenadeThrown( ThrowingItemEventArgs ev )
@@ -118,8 +115,6 @@ namespace RandomGamemode
 
 		public IEnumerator<float> PeanutRaid()
 		{
-			if ( !plugin.Config.PeanutRaidEnabled ) yield break;
-
 			List<Player> PlyList = new List<Player>();
 			yield return Timing.WaitForSeconds( 3f );
 
@@ -128,7 +123,6 @@ namespace RandomGamemode
 				PlyList.Add( ply );
 			}
 
-			Map.Broadcast( 6, "<color=red>The Peanut Raid round has started!</color>" );
 			yield return Timing.WaitForSeconds( 1f );
 			int RandPly = rand.Next( 0, PlyList.Count );
 			Player SelectedDBoi = PlyList[RandPly];
@@ -154,35 +148,24 @@ namespace RandomGamemode
 
 		public IEnumerator<float> GoldfishAttacks()
 		{
-			if ( !plugin.Config.GoldfishEnabled ) yield break;
-
 			yield return Timing.WaitForSeconds( 3f );
 			string Name = "The Black Goldfish";
-			bool ModeEnabled = false;
 
 			foreach ( Player ply in Player.List )
 			{
 				if ( ply.Nickname == Name )
 				{
 					ply.SetRole( RoleType.Scp079 );
-					ModeEnabled = true;
 				}
 				else
 				{
 					CurrentGamemode = 0;
 				}
 			}
-
-			if ( ModeEnabled )
-			{
-				Map.Broadcast( 6, "<color=red>The Goldfish Attacks round has started!</color>" );
-			}
 		}
 
 		public IEnumerator<float> NightOfTheLivingNerd()
 		{
-			if ( !plugin.Config.LivingNerdEnabled ) yield break;
-
 			List<Player> PlyList = new List<Player>();
 			yield return Timing.WaitForSeconds( 3f );
 
@@ -191,7 +174,6 @@ namespace RandomGamemode
 				PlyList.Add( ply );
 			}
 
-			Map.Broadcast( 6, "<color=red>The Night of the Living Nerd round has started!</color>" );
 			yield return Timing.WaitForSeconds( 1f );
 			int RandPly = rand.Next( 0, PlyList.Count );
 			Player SelectedNerd = PlyList[RandPly];
@@ -215,8 +197,6 @@ namespace RandomGamemode
 
 		public IEnumerator<float> SCP682Containment()
 		{
-			if ( !plugin.Config.SCP682ContainmentEnabled ) yield break;
-
 			List<Player> PlyList = new List<Player>();
 			yield return Timing.WaitForSeconds( 3f );
 
@@ -231,7 +211,6 @@ namespace RandomGamemode
 				PlyList.Add( ply );
 			}
 
-			Map.Broadcast( 6, "<color=red>The SCP-682 Containment round has started!</color>" );
 			yield return Timing.WaitForSeconds( 1f );
 			int RandPly = rand.Next( 0, PlyList.Count );
 			Player Selected682 = PlyList[RandPly];
