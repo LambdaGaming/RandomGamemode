@@ -23,6 +23,9 @@ namespace RandomGamemode
 		[Description( "Whether the SCP-682 Containment gamemode is enabled or not." )]
 		public bool SCP682ContainmentEnabled { get; private set; } = true;
 
+		[Description( "Whether the Randomizer gamemode is enabled or not." )]
+		public bool RandomizerEnabled { get; private set; } = true;
+
 		[Description( "Chance of a gamemode being activated at the start of every round. Must be a whole number." )]
 		public int GamemodeChance { get; private set; } = 10;
 

@@ -22,6 +22,7 @@ namespace RandomGamemode
 			events.Map.ExplodingGrenade += EventHandlers.OnGrenadeExplode;
 			events.Player.DroppingItem += EventHandlers.OnItemDropped;
 			events.Player.Joined += EventHandlers.OnPlayerJoin;
+			events.Server.EndingRound += EventHandlers.OnRoundEnding;
 
 			if ( Config.DodgeBallEnabled ) // This ensures that the chances of a gamemode being selected are still the same, even if some are disabled
 				EnabledList.Add( 1 );
@@ -38,7 +39,10 @@ namespace RandomGamemode
 			if ( Config.SCP682ContainmentEnabled )
 				EnabledList.Add( 5 );
 
-			Log.Info( $"Successfully loaded." );
+			if ( Config.RandomizerEnabled )
+				EnabledList.Add( 6 );
+
+			Log.Info( "Successfully loaded." );
 		}
 
 		public override void OnDisabled()
@@ -50,6 +54,7 @@ namespace RandomGamemode
 			events.Map.ExplodingGrenade -= EventHandlers.OnGrenadeExplode;
 			events.Player.DroppingItem -= EventHandlers.OnItemDropped;
 			events.Player.Joined -= EventHandlers.OnPlayerJoin;
+			events.Server.EndingRound -= EventHandlers.OnRoundEnding;
 			EventHandlers = null;
 		}
 	}
