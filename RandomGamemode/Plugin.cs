@@ -1,5 +1,6 @@
 using Exiled.API.Enums;
 using Exiled.API.Features;
+using System;
 using System.Collections.Generic;
 using events = Exiled.Events.Handlers;
 
@@ -8,7 +9,8 @@ namespace RandomGamemode
 	public class Plugin : Plugin<Config>
 	{
 		private EventHandlers EventHandlers;
-
+		public override Version Version { get; } = new Version( 1, 5, 0 );
+		public override Version RequiredExiledVersion { get; } = new Version( 5, 0, 0 );
 		public override PluginPriority Priority { get; } = PluginPriority.Medium;
 		public static List<int> EnabledList = new List<int>();
 
