@@ -9,8 +9,8 @@ namespace RandomGamemode
 	public class Plugin : Plugin<Config>
 	{
 		private EventHandlers EventHandlers;
-		public override Version Version { get; } = new Version( 1, 5, 0 );
-		public override Version RequiredExiledVersion { get; } = new Version( 5, 0, 0 );
+		public override Version Version { get; } = new Version( 1, 5, 1 );
+		public override Version RequiredExiledVersion { get; } = new Version( 6, 0, 0 );
 		public override PluginPriority Priority { get; } = PluginPriority.Medium;
 		public static List<int> EnabledList = new List<int>();
 
@@ -20,7 +20,7 @@ namespace RandomGamemode
 			EventHandlers = new EventHandlers( this );
 			events.Server.RoundStarted += EventHandlers.OnRoundStart;
 			events.Server.RoundEnded += EventHandlers.OnRoundEnd;
-			events.Player.ThrowingItem += EventHandlers.OnGrenadeThrown;
+			events.Player.ThrowingRequest += EventHandlers.OnGrenadeThrown;
 			events.Map.ExplodingGrenade += EventHandlers.OnGrenadeExplode;
 			events.Player.DroppingItem += EventHandlers.OnItemDropped;
 			events.Player.Joined += EventHandlers.OnPlayerJoin;
@@ -52,7 +52,7 @@ namespace RandomGamemode
 			base.OnDisabled();
 			events.Server.RoundStarted -= EventHandlers.OnRoundStart;
 			events.Server.RoundEnded -= EventHandlers.OnRoundEnd;
-			events.Player.ThrowingItem -= EventHandlers.OnGrenadeThrown;
+			events.Player.ThrowingRequest -= EventHandlers.OnGrenadeThrown;
 			events.Map.ExplodingGrenade -= EventHandlers.OnGrenadeExplode;
 			events.Player.DroppingItem -= EventHandlers.OnItemDropped;
 			events.Player.Joined -= EventHandlers.OnPlayerJoin;

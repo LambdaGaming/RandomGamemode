@@ -8,6 +8,9 @@ namespace RandomGamemode
 		[Description( "Whether the plugin is enabled or not." )]
 		public bool IsEnabled { get; set; } = true;
 
+		[Description( "Whether or not debug messages should be shown in the console." )]
+		public bool Debug { get; set; } = false;
+
 		[Description( "Whether the Dodgeball gamemode is enabled or not." )]
 		public bool DodgeBallEnabled { get; private set; } = true;
 
