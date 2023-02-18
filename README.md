@@ -6,7 +6,7 @@
 - <u>Peanut Raid:</u> All players spawn as SCP-173 besides 1 randomly chosen player, who spawns as a mini Class D and has to try to escape without being killed.
 - <u>Night of the Living Nerd:</u> All players spawn as Class D besides 1 randomly chosen player, who spawns as a Scientist with an LMG and 1000 clips of ammo. The facility lights are turned off for the entirety of the round and all players are given flashlights to help navigate. The Class Ds have to escape the facility, respawn as Chaos, and kill the Scientist before being killed themselves.
 - <u>SCP-682 Containment:</u> All players spawn as MTF Commander besides 1 randomly chosen player, who spawns as SCP-692 (a huge SCP-939 with 5000 HP). MTF must work together to hunt down and eliminate SCP-682.
-- <u>Randomizer:</u> Randomizes all player roles, spawns, and inventories. Only one SCP will spawn each round since they cannot attack each other.
+- <u>Randomizer:</u> Randomizes all player roles, spawns, and inventories. Only one SCP will spawn each round since they cannot attack each other. Friendly fire is enabled and normal win conditions are disabled to prevent the round from ending too early. The round will end when a single player is left alive.
 
 # Notes:
 - See your EXILED config for options to enable/disable specific gamemodes. (Make sure you run the server at least once with the plugin so the configs generate.)
