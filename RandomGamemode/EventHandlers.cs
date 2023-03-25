@@ -183,8 +183,7 @@ namespace RandomGamemode
 			SelectedNerd.AddItem( ItemType.Flashlight );
 			SelectedNerd.SetAmmo( AmmoType.Nato762, plugin.Config.NerdAmmoAmount );
 			SelectedNerd.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.Scp939 ).Position;
-			SelectedNerd.EnableEffect( EffectType.Scp207 );
-			SelectedNerd.EnableEffect( EffectType.Deafened );
+			SelectedNerd.EnableEffect( EffectType.MovementBoost );
 			PlyList.RemoveAt( RandPly );
 			Map.TurnOffAllLights( 5000 );
 
@@ -312,7 +311,7 @@ namespace RandomGamemode
 
 			if ( CurrentGamemode == 6 && totalalive > 1 )
 			{
-				ev.IsAllowed = false;
+				ev.IsRoundEnded = false;
 			}
 		}
 
