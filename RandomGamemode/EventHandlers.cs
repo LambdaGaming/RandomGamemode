@@ -83,7 +83,8 @@ namespace RandomGamemode
 
 		public void OnGrenadeThrown( ThrowingRequestEventArgs ev )
 		{
-			if ( CurrentGamemode == 1 )
+			// Temporarily disabled due to a base game bug
+			/*if ( CurrentGamemode == 1 )
 			{
 				if ( TotalBalls >= plugin.Config.MaxDodgeballs )
 				{
@@ -95,7 +96,7 @@ namespace RandomGamemode
 					ev.Player.AddItem( ItemType.SCP018 );
 					TotalBalls++;
 				}
-			}
+			}*/
 		}
 
 		public void OnGrenadeExplode( ExplodingGrenadeEventArgs ev )

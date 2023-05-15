@@ -9,8 +9,8 @@ namespace RandomGamemode
 	public class Plugin : Plugin<Config>
 	{
 		private EventHandlers EventHandlers;
-		public override Version Version { get; } = new Version( 1, 6, 0 );
-		public override Version RequiredExiledVersion { get; } = new Version( 6, 1, 0 );
+		public override Version Version { get; } = new Version( 1, 6, 1 );
+		public override Version RequiredExiledVersion { get; } = new Version( 7, 0, 0 );
 		public override PluginPriority Priority { get; } = PluginPriority.Medium;
 		public static List<int> EnabledList = new List<int>();
 
@@ -26,8 +26,9 @@ namespace RandomGamemode
 			events.Player.Joined += EventHandlers.OnPlayerJoin;
 			events.Server.EndingRound += EventHandlers.OnRoundEnding;
 
-			if ( Config.DodgeBallEnabled ) // This ensures that the chances of a gamemode being selected are still the same, even if some are disabled
-				EnabledList.Add( 1 );
+			// Temporarily disable dodgeball due to a base game bug that prevents grenade throwing from being blocked
+			//if ( Config.DodgeBallEnabled ) // This ensures that the chances of a gamemode being selected are still the same, even if some are disabled
+			//	EnabledList.Add( 1 );
 
 			if ( Config.PeanutRaidEnabled )
 				EnabledList.Add( 2 );
