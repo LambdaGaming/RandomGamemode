@@ -20,15 +20,13 @@ namespace RandomGamemode
 			EventHandlers = new EventHandlers( this );
 			events.Server.RoundStarted += EventHandlers.OnRoundStart;
 			events.Server.RoundEnded += EventHandlers.OnRoundEnd;
-			events.Player.ThrowingRequest += EventHandlers.OnGrenadeThrown;
-			events.Map.ExplodingGrenade += EventHandlers.OnGrenadeExplode;
+			events.Player.ThrownProjectile += EventHandlers.OnGrenadeThrown;
 			events.Player.DroppingItem += EventHandlers.OnItemDropped;
 			events.Player.Joined += EventHandlers.OnPlayerJoin;
 			events.Server.EndingRound += EventHandlers.OnRoundEnding;
 
-			// Temporarily disable dodgeball due to a base game bug that prevents grenade throwing from being blocked
-			//if ( Config.DodgeBallEnabled ) // This ensures that the chances of a gamemode being selected are still the same, even if some are disabled
-			//	EnabledList.Add( 1 );
+			if ( Config.DodgeBallEnabled ) // This ensures that the chances of a gamemode being selected are still the same, even if some are disabled
+				EnabledList.Add( 1 );
 
 			if ( Config.PeanutRaidEnabled )
 				EnabledList.Add( 2 );
@@ -53,8 +51,7 @@ namespace RandomGamemode
 			base.OnDisabled();
 			events.Server.RoundStarted -= EventHandlers.OnRoundStart;
 			events.Server.RoundEnded -= EventHandlers.OnRoundEnd;
-			events.Player.ThrowingRequest -= EventHandlers.OnGrenadeThrown;
-			events.Map.ExplodingGrenade -= EventHandlers.OnGrenadeExplode;
+			events.Player.ThrownProjectile -= EventHandlers.OnGrenadeThrown;
 			events.Player.DroppingItem -= EventHandlers.OnItemDropped;
 			events.Player.Joined -= EventHandlers.OnPlayerJoin;
 			events.Server.EndingRound -= EventHandlers.OnRoundEnding;

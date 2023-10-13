@@ -1,7 +1,7 @@
 ﻿using Exiled.API.Enums;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
-using Exiled.Events.EventArgs.Map;
+using Exiled.API.Features.Pickups.Projectiles;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Server;
 using MEC;
@@ -29,7 +29,6 @@ namespace RandomGamemode
 		private Plugin plugin;
 		private Gamemode CurrentGamemode;
 		private bool FriendlyFireDefault;
-		private int TotalBalls = 0;
 		System.Random rand = new System.Random();
 
 		public EventHandlers( Plugin plugin ) => this.plugin = plugin;
@@ -52,7 +51,7 @@ namespace RandomGamemode
 		{
 			if ( rand.Next( 1, 101 ) <= plugin.Config.GamemodeChance )
 			{
-				CurrentGamemode = ( Gamemode ) Plugin.EnabledList[rand.Next( 0, Plugin.EnabledList.Count )];
+				CurrentGamemode = ( Gamemode ) Plugin.EnabledList[rand.Next( Plugin.EnabledList.Count )];
 				switch ( CurrentGamemode )
 				{
 					case Gamemode.Dodgeball: Timing.RunCoroutine( DodgeBall() ); break;
@@ -87,33 +86,17 @@ namespace RandomGamemode
 					ply.AddItem( ItemType.SCP018 );
 				}
 
-				ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.Scp106 ).Position;
+				ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.NtfCaptain ).Position;
 			}
 		}
 
-		public void OnGrenadeThrown( ThrowingRequestEventArgs ev )
+		public void OnGrenadeThrown( ThrownProjectileEventArgs ev )
 		{
-			// Temporarily disabled due to a base game bug
-			/*if ( CurrentGamemode == 1 )
+			if ( CurrentGamemode == Gamemode.Dodgeball && ev.Projectile.ProjectileType == ProjectileType.Scp018 )
 			{
-				if ( TotalBalls >= plugin.Config.MaxDodgeballs )
-				{
-					ev.IsAllowed = false;
-				}
-
-				if ( ev.IsAllowed )
-				{
-					ev.Player.AddItem( ItemType.SCP018 );
-					TotalBalls++;
-				}
-			}*/
-		}
-
-		public void OnGrenadeExplode( ExplodingGrenadeEventArgs ev )
-		{
-			if ( CurrentGamemode == Gamemode.Dodgeball )
-			{
-				TotalBalls--;
+				ev.Projectile.Scale *= 3;
+				( ev.Projectile as Scp018Projectile ).FuseTime = 3;
+				ev.Player.AddItem( ItemType.SCP018 );
 			}
 		}
 
@@ -332,7 +315,6 @@ namespace RandomGamemode
 			{
 				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has ended.</color>" );
 				CurrentGamemode = 0;
-				TotalBalls = 0;
 				ServerConsole.FriendlyFire = FriendlyFireDefault;
 			}
 		}
