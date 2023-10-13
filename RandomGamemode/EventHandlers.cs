@@ -13,10 +13,21 @@ using UnityEngine;
 
 namespace RandomGamemode
 {
+	enum Gamemode
+	{
+		Invalid,
+		Dodgeball,
+		PeanutRaid,
+		GoldfishAttacks,
+		NightOfTheLivingNerd,
+		SCP682Containment,
+		Randomizer,
+	}
+
 	public class EventHandlers
 	{
 		private Plugin plugin;
-		public int CurrentGamemode;
+		private Gamemode CurrentGamemode;
 		private bool FriendlyFireDefault;
 		private int TotalBalls = 0;
 		System.Random rand = new System.Random();
@@ -27,12 +38,12 @@ namespace RandomGamemode
 		{
 			switch ( CurrentGamemode )
 			{
-				case 1: return "Dodgeball";
-				case 2: return "Peanut Raid";
-				case 3: return "Goldfish Attacks"; // There's only like 10 people who might get this reference but I'm still adding it for the memes
-				case 4: return "Night of the Living Nerd";
-				case 5: return "SCP-682 Containment";
-				case 6: return "Randomizer";
+				case Gamemode.Dodgeball: return "Dodgeball";
+				case Gamemode.PeanutRaid: return "Peanut Raid";
+				case Gamemode.GoldfishAttacks: return "Goldfish Attacks";
+				case Gamemode.NightOfTheLivingNerd: return "Night of the Living Nerd";
+				case Gamemode.SCP682Containment: return "SCP-682 Containment";
+				case Gamemode.Randomizer: return "Randomizer";
 				default: return "Invalid Gamemode";
 			}
 		}
@@ -41,16 +52,15 @@ namespace RandomGamemode
 		{
 			if ( rand.Next( 1, 101 ) <= plugin.Config.GamemodeChance )
 			{
-				int RandomGamemode = Plugin.EnabledList[rand.Next( 0, Plugin.EnabledList.Count )];
-				CurrentGamemode = RandomGamemode;
-				switch ( RandomGamemode )
+				CurrentGamemode = ( Gamemode ) Plugin.EnabledList[rand.Next( 0, Plugin.EnabledList.Count )];
+				switch ( CurrentGamemode )
 				{
-					case 1: Timing.RunCoroutine( DodgeBall() ); break;
-					case 2: Timing.RunCoroutine( PeanutRaid() ); break;
-					case 3: Timing.RunCoroutine( GoldfishAttacks() ); break;
-					case 4: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
-					case 5: Timing.RunCoroutine( SCP682Containment() ); break;
-					case 6: Timing.RunCoroutine( Randomizer() ); break;
+					case Gamemode.Dodgeball: Timing.RunCoroutine( DodgeBall() ); break;
+					case Gamemode.PeanutRaid: Timing.RunCoroutine( PeanutRaid() ); break;
+					case Gamemode.GoldfishAttacks: Timing.RunCoroutine( GoldfishAttacks() ); break;
+					case Gamemode.NightOfTheLivingNerd: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
+					case Gamemode.SCP682Containment: Timing.RunCoroutine( SCP682Containment() ); break;
+					case Gamemode.Randomizer: Timing.RunCoroutine( Randomizer() ); break;
 				}
 				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has started!</color>" );
 			}
@@ -101,7 +111,7 @@ namespace RandomGamemode
 
 		public void OnGrenadeExplode( ExplodingGrenadeEventArgs ev )
 		{
-			if ( CurrentGamemode == 1 )
+			if ( CurrentGamemode == Gamemode.Dodgeball )
 			{
 				TotalBalls--;
 			}
@@ -109,7 +119,7 @@ namespace RandomGamemode
 
 		public void OnItemDropped( DroppingItemEventArgs ev )
 		{
-			if ( CurrentGamemode == 1 )
+			if ( CurrentGamemode == Gamemode.Dodgeball )
 			{
 				ev.IsAllowed = false;
 			}
@@ -142,7 +152,7 @@ namespace RandomGamemode
 
 		public void OnPlayerJoin( JoinedEventArgs ev )
 		{
-			if ( CurrentGamemode == 2 )
+			if ( CurrentGamemode == Gamemode.PeanutRaid )
 			{
 				ev.Player.Role.Set( RoleTypeId.Scp173 );
 			}
@@ -310,7 +320,7 @@ namespace RandomGamemode
 					totalalive++;
 			}
 
-			if ( CurrentGamemode == 6 && totalalive > 1 )
+			if ( CurrentGamemode == Gamemode.Randomizer && totalalive > 1 )
 			{
 				ev.IsRoundEnded = false;
 			}
