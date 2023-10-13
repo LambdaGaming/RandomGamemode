@@ -173,8 +173,10 @@ namespace RandomGamemode
 			int RandPly = rand.Next( PlyList.Count );
 			Player SelectedNerd = PlyList[RandPly];
 			SelectedNerd.Role.Set( RoleTypeId.Scientist );
+			SelectedNerd.ClearInventory();
 			SelectedNerd.AddItem( ItemType.GunLogicer );
 			SelectedNerd.AddItem( ItemType.Flashlight );
+			SelectedNerd.AddItem( ItemType.KeycardFacilityManager );
 			SelectedNerd.SetAmmo( AmmoType.Nato762, plugin.Config.NerdAmmoAmount );
 			SelectedNerd.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.Scp939 ).Position;
 			SelectedNerd.EnableEffect( EffectType.MovementBoost );
