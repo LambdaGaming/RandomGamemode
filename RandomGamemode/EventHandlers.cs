@@ -2,7 +2,9 @@
 using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.API.Features.Pickups.Projectiles;
+using Exiled.API.Features.Roles;
 using Exiled.Events.EventArgs.Player;
+using Exiled.Events.EventArgs.Scp079;
 using Exiled.Events.EventArgs.Server;
 using MEC;
 using PlayerRoles;
@@ -18,7 +20,7 @@ namespace RandomGamemode
 		Invalid,
 		Dodgeball,
 		PeanutRaid,
-		GoldfishAttacks,
+		BlueScreenOfDeath,
 		NightOfTheLivingNerd,
 		SCP682Containment,
 		Randomizer,
@@ -39,7 +41,7 @@ namespace RandomGamemode
 			{
 				case Gamemode.Dodgeball: return "Dodgeball";
 				case Gamemode.PeanutRaid: return "Peanut Raid";
-				case Gamemode.GoldfishAttacks: return "Goldfish Attacks";
+				case Gamemode.BlueScreenOfDeath: return "Blue Screen of Death";
 				case Gamemode.NightOfTheLivingNerd: return "Night of the Living Nerd";
 				case Gamemode.SCP682Containment: return "SCP-682 Containment";
 				case Gamemode.Randomizer: return "Randomizer";
@@ -98,21 +100,26 @@ namespace RandomGamemode
 			SelectedDBoi.Scale /= 2;
 		}
 
-		public IEnumerator<float> GoldfishAttacks()
+		public IEnumerator<float> BlueScreenOfDeath()
 		{
+			List<Player> PlyList = new List<Player>();
 			yield return Timing.WaitForSeconds( 3f );
-			string Name = "The Black Goldfish";
 
 			foreach ( Player ply in Player.List )
 			{
-				if ( ply.Nickname == Name )
-				{
-					ply.Role.Set( RoleTypeId.Scp079 );
-				}
-				else
-				{
-					CurrentGamemode = 0;
-				}
+				PlyList.Add( ply );
+			}
+
+			int RandPly = rand.Next( PlyList.Count );
+			Player pc = PlyList[RandPly];
+			pc.Role.Set( RoleTypeId.Scp079 );
+			( pc.Role as Scp079Role ).Level = 3;
+			PlyList.RemoveAt( RandPly );
+
+			foreach ( Player ply in PlyList )
+			{
+				ply.Role.Set( RoleTypeId.Scientist );
+				ply.ClearInventory();
 			}
 		}
 
@@ -170,14 +177,14 @@ namespace RandomGamemode
 			Selected682.Role.Set( RoleTypeId.Scp939 );
 			yield return Timing.WaitForSeconds( 3f );
 			Selected682.Scale *= 1.75f; // Any larger and players are hard to kill due to hitbox issues
-			Selected682.MaxHealth = plugin.Config.SCP682Health;
-			Selected682.Health = plugin.Config.SCP682Health;
+			Selected682.MaxHealth = plugin.Config.Scp682Health;
+			Selected682.Health = plugin.Config.Scp682Health;
 			PlyList.RemoveAt( RandPly );
 
 			foreach ( Player ply in PlyList )
 			{
 				ply.Role.Set( RoleTypeId.NtfCaptain );
-				ply.SetAmmo( AmmoType.Nato556, plugin.Config.SCP682MTFAmmo );
+				ply.SetAmmo( AmmoType.Nato556, plugin.Config.Scp682MtfAmmo );
 				ply.AddItem( ItemType.KeycardO5 );
 			}
 		}
@@ -263,7 +270,7 @@ namespace RandomGamemode
 				{
 					case Gamemode.Dodgeball: Timing.RunCoroutine( DodgeBall() ); break;
 					case Gamemode.PeanutRaid: Timing.RunCoroutine( PeanutRaid() ); break;
-					case Gamemode.GoldfishAttacks: Timing.RunCoroutine( GoldfishAttacks() ); break;
+					case Gamemode.BlueScreenOfDeath: Timing.RunCoroutine( BlueScreenOfDeath() ); break;
 					case Gamemode.NightOfTheLivingNerd: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
 					case Gamemode.SCP682Containment: Timing.RunCoroutine( SCP682Containment() ); break;
 					case Gamemode.Randomizer: Timing.RunCoroutine( Randomizer() ); break;
@@ -271,10 +278,10 @@ namespace RandomGamemode
 				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has started!</color>" );
 			}
 		}
-
-		// Prevents randomizer round from ending if everyone is on the same team
+		
 		public void OnRoundEnding( EndingRoundEventArgs ev )
 		{
+			// Prevents randomizer round from ending if everyone is on the same team
 			int totalalive = 0;
 			foreach ( Player ply in Player.List )
 			{
@@ -290,6 +297,7 @@ namespace RandomGamemode
 
 		public void OnRoundEnd( RoundEndedEventArgs ev )
 		{
+			// Broadcast that the gamemode has ended
 			if ( CurrentGamemode > 0 )
 			{
 				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has ended.</color>" );
@@ -300,6 +308,7 @@ namespace RandomGamemode
 
 		public void OnGrenadeThrown( ThrownProjectileEventArgs ev )
 		{
+			// Increase size and decrease fuse time of dodgeballs
 			if ( CurrentGamemode == Gamemode.Dodgeball && ev.Projectile.ProjectileType == ProjectileType.Scp018 )
 			{
 				ev.Projectile.Scale *= 3;
@@ -310,17 +319,37 @@ namespace RandomGamemode
 
 		public void OnItemDropped( DroppingItemEventArgs ev )
 		{
+			// Disable dropping dodgeballs so players don't lose all of them
 			if ( CurrentGamemode == Gamemode.Dodgeball )
 			{
 				ev.IsAllowed = false;
 			}
 		}
 
-		public void OnPlayerJoin( JoinedEventArgs ev )
+		public void OnChangeCamera( ChangingCameraEventArgs ev )
 		{
-			if ( CurrentGamemode == Gamemode.PeanutRaid )
+			// Set room light color to blue when 079 views it
+			if ( CurrentGamemode == Gamemode.BlueScreenOfDeath )
 			{
-				ev.Player.Role.Set( RoleTypeId.Scp173 );
+				ev.Camera.Room.RoomLightController.NetworkOverrideColor = Color.blue;
+			}
+		}
+
+		public void OnGeneratorActivate( ActivatingGeneratorEventArgs ev )
+		{
+			// Set generator activation time to 5 minutes
+			if ( CurrentGamemode == Gamemode.BlueScreenOfDeath )
+			{
+				ev.Generator.ActivationTime = 300;
+			}
+		}
+
+		public void OnGeneratorDeactivate( StoppingGeneratorEventArgs ev )
+		{
+			// Prevent generators from being deactivated once they're active
+			if ( CurrentGamemode == Gamemode.BlueScreenOfDeath )
+			{
+				ev.IsAllowed = false;
 			}
 		}
 		#endregion

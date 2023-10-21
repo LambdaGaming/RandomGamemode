@@ -9,7 +9,7 @@ namespace RandomGamemode
 	public class Plugin : Plugin<Config>
 	{
 		private EventHandlers EventHandlers;
-		public override Version Version { get; } = new Version( 1, 7, 0 );
+		public override Version Version { get; } = new Version( 2, 0, 0 );
 		public override Version RequiredExiledVersion { get; } = new Version( 8, 0, 0 );
 		public override PluginPriority Priority { get; } = PluginPriority.Medium;
 		public static List<int> EnabledList = new List<int>();
@@ -22,8 +22,10 @@ namespace RandomGamemode
 			events.Server.RoundEnded += EventHandlers.OnRoundEnd;
 			events.Player.ThrownProjectile += EventHandlers.OnGrenadeThrown;
 			events.Player.DroppingItem += EventHandlers.OnItemDropped;
-			events.Player.Joined += EventHandlers.OnPlayerJoin;
 			events.Server.EndingRound += EventHandlers.OnRoundEnding;
+			events.Scp079.ChangingCamera += EventHandlers.OnChangeCamera;
+			events.Player.ActivatingGenerator += EventHandlers.OnGeneratorActivate;
+			events.Player.StoppingGenerator += EventHandlers.OnGeneratorDeactivate;
 
 			if ( Config.DodgeBallEnabled ) // This ensures that the chances of a gamemode being selected are still the same, even if some are disabled
 				EnabledList.Add( 1 );
@@ -31,13 +33,13 @@ namespace RandomGamemode
 			if ( Config.PeanutRaidEnabled )
 				EnabledList.Add( 2 );
 
-			if ( Config.GoldfishEnabled )
+			if ( Config.BlueScreenOfDeathEnabled )
 				EnabledList.Add( 3 );
 
 			if ( Config.LivingNerdEnabled )
 				EnabledList.Add( 4 );
 
-			if ( Config.SCP682ContainmentEnabled )
+			if ( Config.Scp682ContainmentEnabled )
 				EnabledList.Add( 5 );
 
 			if ( Config.RandomizerEnabled )
@@ -53,8 +55,10 @@ namespace RandomGamemode
 			events.Server.RoundEnded -= EventHandlers.OnRoundEnd;
 			events.Player.ThrownProjectile -= EventHandlers.OnGrenadeThrown;
 			events.Player.DroppingItem -= EventHandlers.OnItemDropped;
-			events.Player.Joined -= EventHandlers.OnPlayerJoin;
 			events.Server.EndingRound -= EventHandlers.OnRoundEnding;
+			events.Scp079.ChangingCamera -= EventHandlers.OnChangeCamera;
+			events.Player.ActivatingGenerator -= EventHandlers.OnGeneratorActivate;
+			events.Player.StoppingGenerator -= EventHandlers.OnGeneratorDeactivate;
 			EventHandlers = null;
 		}
 	}
