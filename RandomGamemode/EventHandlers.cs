@@ -3,6 +3,7 @@ using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.API.Features.Pickups.Projectiles;
 using Exiled.API.Features.Roles;
+using Exiled.Events.EventArgs.Map;
 using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Scp079;
 using Exiled.Events.EventArgs.Server;
@@ -22,7 +23,8 @@ namespace RandomGamemode
 		BlueScreenOfDeath,
 		NightOfTheLivingNerd,
 		Randomizer,
-		AnnoyingMimicry
+		AnnoyingMimicry,
+		LockedIn
 	}
 
 	public class EventHandlers
@@ -44,6 +46,7 @@ namespace RandomGamemode
 				case Gamemode.NightOfTheLivingNerd: return "Night of the Living Nerd";
 				case Gamemode.Randomizer: return "Randomizer";
 				case Gamemode.AnnoyingMimicry: return "Annoying Mimicry";
+				case Gamemode.LockedIn: return "Locked In";
 				default: return "Invalid Gamemode";
 			}
 		}
@@ -332,10 +335,35 @@ namespace RandomGamemode
 
 		public void OnRespawn( RespawningTeamEventArgs ev )
 		{
-			// Disable MTF and chaos respawning for Annoying Mimicry gamemode
+			// Disable respawning for Annoying Mimicry gamemode and change spawn location for Locked in gamemode
 			if ( CurrentGamemode == Gamemode.AnnoyingMimicry )
 			{
 				ev.IsAllowed = false;
+			}
+			else if ( CurrentGamemode == Gamemode.LockedIn )
+			{
+				if ( ev.NextKnownTeam == Respawning.SpawnableTeamType.NineTailedFox )
+				{
+					Timing.CallDelayed( 3, () => {
+						foreach( Player ply in ev.Players )
+						{
+							ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.FacilityGuard ).Position;
+						}
+					} );
+				}
+				else if ( ev.NextKnownTeam == Respawning.SpawnableTeamType.ChaosInsurgency )
+				{
+					Timing.CallDelayed( 3, () => {
+						foreach ( Player ply in ev.Players )
+						{
+							List<RoleTypeId> scps = new List<RoleTypeId>() {
+								RoleTypeId.Scp939, RoleTypeId.Scp049, RoleTypeId.Scp096,
+								RoleTypeId.Scp173, RoleTypeId.Scp106
+							};
+							ply.Position = RoleExtensions.GetRandomSpawnLocation( scps.RandomItem() ).Position;
+						}
+					} );
+				}
 			}
 		}
 
@@ -350,8 +378,16 @@ namespace RandomGamemode
 
 		public void OnDoorUse( InteractingDoorEventArgs ev )
 		{
-			// Disable using gates for Annoying Mimicry gamemode
-			if ( CurrentGamemode == Gamemode.AnnoyingMimicry && ev.Door.IsGate )
+			// Disable using gates for Annoying Mimicry and Locked In gamemodes
+			if ( ( CurrentGamemode == Gamemode.AnnoyingMimicry || CurrentGamemode == Gamemode.LockedIn ) && ev.Door.IsGate )
+			{
+				ev.IsAllowed = false;
+			}
+		}
+
+		public void OnDecon( DecontaminatingEventArgs ev )
+		{
+			if ( CurrentGamemode == Gamemode.LockedIn )
 			{
 				ev.IsAllowed = false;
 			}

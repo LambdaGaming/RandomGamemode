@@ -29,6 +29,7 @@ namespace RandomGamemode
 			events.Server.RespawningTeam += EventHandlers.OnRespawn;
 			events.Player.Died += EventHandlers.OnPlayerDied;
 			events.Player.InteractingDoor += EventHandlers.OnDoorUse;
+			events.Map.Decontaminating += EventHandlers.OnDecon;
 
 			if ( Config.DodgeBallEnabled ) // This ensures that the chances of a gamemode being selected are still the same, even if some are disabled
 				EnabledList.Add( Gamemode.Dodgeball );
@@ -42,6 +43,8 @@ namespace RandomGamemode
 				EnabledList.Add( Gamemode.Randomizer );
 			if ( Config.AnnoyingMimicryEnabled )
 				EnabledList.Add( Gamemode.AnnoyingMimicry );
+			if ( Config.LockedInEnabled )
+				EnabledList.Add( Gamemode.LockedIn );
 
 			Log.Info( "Successfully loaded." );
 		}
@@ -60,6 +63,7 @@ namespace RandomGamemode
 			events.Server.RespawningTeam -= EventHandlers.OnRespawn;
 			events.Player.Died -= EventHandlers.OnPlayerDied;
 			events.Player.InteractingDoor -= EventHandlers.OnDoorUse;
+			events.Map.Decontaminating -= EventHandlers.OnDecon;
 			EventHandlers = null;
 		}
 	}

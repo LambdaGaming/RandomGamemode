@@ -31,5 +31,8 @@ namespace RandomGamemode
 
 		[Description( "Enable/disable the Annoying Mimicry gamemode." )]
 		public bool AnnoyingMimicryEnabled { get; private set; } = true;
+
+		[Description( "Enable/disable the Locked In gamemode." )]
+		public bool LockedInEnabled { get; private set; } = true;
 	}
 }
