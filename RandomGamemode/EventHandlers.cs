@@ -95,7 +95,7 @@ namespace RandomGamemode
 			if ( CurrentGamemode == Gamemode.Dodgeball && ev.Projectile.ProjectileType == ProjectileType.Scp018 )
 			{
 				ev.Projectile.Scale *= 3;
-				( ev.Projectile as Scp018Projectile ).FuseTime = 3;
+				( ev.Projectile as Scp018Projectile ).FuseTime = 1;
 				ev.Player.AddItem( ItemType.SCP018 );
 			}
 		}
