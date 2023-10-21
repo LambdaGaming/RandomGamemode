@@ -88,7 +88,7 @@ namespace RandomGamemode
 				{
 					ply.Role.Set( RoleTypeId.ClassD );
 					yield return Timing.WaitForSeconds( 0.5f );
-					ply.Scale *= 0.5f;
+					ply.Scale *= 0.25f;
 				}
 				else
 				{
