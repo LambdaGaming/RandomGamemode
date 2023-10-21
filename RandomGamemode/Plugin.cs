@@ -26,6 +26,9 @@ namespace RandomGamemode
 			events.Scp079.ChangingCamera += EventHandlers.OnChangeCamera;
 			events.Player.ActivatingGenerator += EventHandlers.OnGeneratorActivate;
 			events.Player.StoppingGenerator += EventHandlers.OnGeneratorDeactivate;
+			events.Server.RespawningTeam += EventHandlers.OnRespawn;
+			events.Player.Died += EventHandlers.OnPlayerDied;
+			events.Player.InteractingDoor += EventHandlers.OnDoorUse;
 
 			if ( Config.DodgeBallEnabled ) // This ensures that the chances of a gamemode being selected are still the same, even if some are disabled
 				EnabledList.Add( Gamemode.Dodgeball );
@@ -37,6 +40,8 @@ namespace RandomGamemode
 				EnabledList.Add( Gamemode.NightOfTheLivingNerd );
 			if ( Config.RandomizerEnabled )
 				EnabledList.Add( Gamemode.Randomizer );
+			if ( Config.AnnoyingMimicryEnabled )
+				EnabledList.Add( Gamemode.AnnoyingMimicry );
 
 			Log.Info( "Successfully loaded." );
 		}
@@ -52,6 +57,9 @@ namespace RandomGamemode
 			events.Scp079.ChangingCamera -= EventHandlers.OnChangeCamera;
 			events.Player.ActivatingGenerator -= EventHandlers.OnGeneratorActivate;
 			events.Player.StoppingGenerator -= EventHandlers.OnGeneratorDeactivate;
+			events.Server.RespawningTeam -= EventHandlers.OnRespawn;
+			events.Player.Died -= EventHandlers.OnPlayerDied;
+			events.Player.InteractingDoor -= EventHandlers.OnDoorUse;
 			EventHandlers = null;
 		}
 	}

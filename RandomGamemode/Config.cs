@@ -14,22 +14,22 @@ namespace RandomGamemode
 		[Description( "Chance of a gamemode being activated at the start of every round. Must be a whole number." )]
 		public int GamemodeChance { get; private set; } = 10;
 
-		[Description( "Whether the Dodgeball gamemode is enabled or not." )]
+		[Description( "Enable/disable the Dodgeball gamemode." )]
 		public bool DodgeBallEnabled { get; private set; } = true;
 
-		[Description( "Whether the Peanut Raid gamemode is enabled or not." )]
+		[Description( "Enable/disable the Peanut Raid gamemode." )]
 		public bool PeanutRaidEnabled { get; private set; } = true;
 
-		[Description( "Whether the Blue Screen of Death gamemode is enabled or not." )]
+		[Description( "Enable/disable the Blue Screen of Death gamemode." )]
 		public bool BlueScreenOfDeathEnabled { get; private set; } = true;
 
-		[Description( "Whether the Night of the Living Nerd gamemode is enabled or not." )]
+		[Description( "Enable/disable the Night of the Living Nerd gamemode." )]
 		public bool LivingNerdEnabled { get; private set; } = true;
 
-		[Description( "Whether the Randomizer gamemode is enabled or not." )]
+		[Description( "Enable/disable the Randomizer gamemode." )]
 		public bool RandomizerEnabled { get; private set; } = true;
 
-		[Description( "Amount of ammo the scientist should get for the Night of the Living Nerd gamemode." )]
-		public ushort NerdAmmoAmount { get; private set; } = 1000;
+		[Description( "Enable/disable the Annoying Mimicry gamemode." )]
+		public bool AnnoyingMimicryEnabled { get; private set; } = true;
 	}
 }

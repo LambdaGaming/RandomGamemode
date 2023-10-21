@@ -10,7 +10,6 @@ using MEC;
 using PlayerRoles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace RandomGamemode
@@ -23,6 +22,7 @@ namespace RandomGamemode
 		BlueScreenOfDeath,
 		NightOfTheLivingNerd,
 		Randomizer,
+		AnnoyingMimicry
 	}
 
 	public class EventHandlers
@@ -43,6 +43,7 @@ namespace RandomGamemode
 				case Gamemode.BlueScreenOfDeath: return "Blue Screen of Death";
 				case Gamemode.NightOfTheLivingNerd: return "Night of the Living Nerd";
 				case Gamemode.Randomizer: return "Randomizer";
+				case Gamemode.AnnoyingMimicry: return "Annoying Mimicry";
 				default: return "Invalid Gamemode";
 			}
 		}
@@ -139,7 +140,7 @@ namespace RandomGamemode
 			SelectedNerd.AddItem( ItemType.GunLogicer );
 			SelectedNerd.AddItem( ItemType.Flashlight );
 			SelectedNerd.AddItem( ItemType.KeycardFacilityManager );
-			SelectedNerd.SetAmmo( AmmoType.Nato762, plugin.Config.NerdAmmoAmount );
+			SelectedNerd.SetAmmo( AmmoType.Nato762, 1000 );
 			SelectedNerd.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.Scp939 ).Position;
 			SelectedNerd.EnableEffect( EffectType.MovementBoost );
 			PlyList.RemoveAt( RandPly );
@@ -222,6 +223,18 @@ namespace RandomGamemode
 				}
 			}
 		}
+
+		public IEnumerator<float> AnnoyingMimicry()
+		{
+			yield return Timing.WaitForSeconds( 3f );
+			foreach ( Player ply in Player.List )
+			{
+				if ( ply.IsScp )
+					ply.Role.Set( RoleTypeId.Scp939 );
+				else
+					ply.Role.Set( RoleTypeId.ClassD );
+			}
+		}
 		#endregion
 
 		#region Events
@@ -237,6 +250,7 @@ namespace RandomGamemode
 					case Gamemode.BlueScreenOfDeath: Timing.RunCoroutine( BlueScreenOfDeath() ); break;
 					case Gamemode.NightOfTheLivingNerd: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
 					case Gamemode.Randomizer: Timing.RunCoroutine( Randomizer() ); break;
+					case Gamemode.AnnoyingMimicry: Timing.RunCoroutine( AnnoyingMimicry() ); break;
 				}
 				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has started!</color>" );
 			}
@@ -311,6 +325,33 @@ namespace RandomGamemode
 		{
 			// Prevent generators from being deactivated once they're active
 			if ( CurrentGamemode == Gamemode.BlueScreenOfDeath )
+			{
+				ev.IsAllowed = false;
+			}
+		}
+
+		public void OnRespawn( RespawningTeamEventArgs ev )
+		{
+			// Disable MTF and chaos respawning for Annoying Mimicry gamemode
+			if ( CurrentGamemode == Gamemode.AnnoyingMimicry )
+			{
+				ev.IsAllowed = false;
+			}
+		}
+
+		public void OnPlayerDied( DiedEventArgs ev )
+		{
+			// Respawn killed players as 939 for Annoying Mimicry gamemode
+			if ( CurrentGamemode == Gamemode.AnnoyingMimicry )
+			{
+				Timing.CallDelayed( 3, () => ev.Player.Role.Set( RoleTypeId.Scp939 ) );
+			}
+		}
+
+		public void OnDoorUse( InteractingDoorEventArgs ev )
+		{
+			// Disable using gates for Annoying Mimicry gamemode
+			if ( CurrentGamemode == Gamemode.AnnoyingMimicry && ev.Door.IsGate )
 			{
 				ev.IsAllowed = false;
 			}
