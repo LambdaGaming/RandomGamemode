@@ -12,7 +12,7 @@ namespace RandomGamemode
 		public override Version Version { get; } = new Version( 2, 0, 0 );
 		public override Version RequiredExiledVersion { get; } = new Version( 8, 0, 0 );
 		public override PluginPriority Priority { get; } = PluginPriority.Medium;
-		public static List<int> EnabledList = new List<int>();
+		internal static List<Gamemode> EnabledList = new List<Gamemode>();
 
 		public override void OnEnabled()
 		{
@@ -28,22 +28,15 @@ namespace RandomGamemode
 			events.Player.StoppingGenerator += EventHandlers.OnGeneratorDeactivate;
 
 			if ( Config.DodgeBallEnabled ) // This ensures that the chances of a gamemode being selected are still the same, even if some are disabled
-				EnabledList.Add( 1 );
-
+				EnabledList.Add( Gamemode.Dodgeball );
 			if ( Config.PeanutRaidEnabled )
-				EnabledList.Add( 2 );
-
+				EnabledList.Add( Gamemode.PeanutRaid );
 			if ( Config.BlueScreenOfDeathEnabled )
-				EnabledList.Add( 3 );
-
+				EnabledList.Add( Gamemode.BlueScreenOfDeath );
 			if ( Config.LivingNerdEnabled )
-				EnabledList.Add( 4 );
-
-			if ( Config.Scp682ContainmentEnabled )
-				EnabledList.Add( 5 );
-
+				EnabledList.Add( Gamemode.NightOfTheLivingNerd );
 			if ( Config.RandomizerEnabled )
-				EnabledList.Add( 6 );
+				EnabledList.Add( Gamemode.Randomizer );
 
 			Log.Info( "Successfully loaded." );
 		}

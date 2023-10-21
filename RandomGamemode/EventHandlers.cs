@@ -22,7 +22,6 @@ namespace RandomGamemode
 		PeanutRaid,
 		BlueScreenOfDeath,
 		NightOfTheLivingNerd,
-		SCP682Containment,
 		Randomizer,
 	}
 
@@ -43,7 +42,6 @@ namespace RandomGamemode
 				case Gamemode.PeanutRaid: return "Peanut Raid";
 				case Gamemode.BlueScreenOfDeath: return "Blue Screen of Death";
 				case Gamemode.NightOfTheLivingNerd: return "Night of the Living Nerd";
-				case Gamemode.SCP682Containment: return "SCP-682 Containment";
 				case Gamemode.Randomizer: return "Randomizer";
 				default: return "Invalid Gamemode";
 			}
@@ -97,7 +95,7 @@ namespace RandomGamemode
 			}
 
 			yield return Timing.WaitForSeconds( 0.5f );
-			SelectedDBoi.Scale /= 2;
+			SelectedDBoi.Scale *= 0.5f;
 		}
 
 		public IEnumerator<float> BlueScreenOfDeath()
@@ -152,40 +150,6 @@ namespace RandomGamemode
 				ply.Role.Set( RoleTypeId.ClassD );
 				ply.AddItem( ItemType.Flashlight );
 				ply.AddItem( ItemType.SCP268 );
-			}
-		}
-
-		public IEnumerator<float> SCP682Containment()
-		{
-			List<Player> PlyList = new List<Player>();
-			yield return Timing.WaitForSeconds( 3f );
-
-			if ( Player.List.Count() < 3 ) // The round ends too early if there's only 2 players
-			{
-				CurrentGamemode = 0;
-				yield break;
-			}
-
-			foreach ( Player ply in Player.List )
-			{
-				PlyList.Add( ply );
-			}
-
-			yield return Timing.WaitForSeconds( 1f );
-			int RandPly = rand.Next( 0, PlyList.Count );
-			Player Selected682 = PlyList[RandPly];
-			Selected682.Role.Set( RoleTypeId.Scp939 );
-			yield return Timing.WaitForSeconds( 3f );
-			Selected682.Scale *= 1.75f; // Any larger and players are hard to kill due to hitbox issues
-			Selected682.MaxHealth = plugin.Config.Scp682Health;
-			Selected682.Health = plugin.Config.Scp682Health;
-			PlyList.RemoveAt( RandPly );
-
-			foreach ( Player ply in PlyList )
-			{
-				ply.Role.Set( RoleTypeId.NtfCaptain );
-				ply.SetAmmo( AmmoType.Nato556, plugin.Config.Scp682MtfAmmo );
-				ply.AddItem( ItemType.KeycardO5 );
 			}
 		}
 
@@ -265,14 +229,13 @@ namespace RandomGamemode
 		{
 			if ( rand.Next( 1, 101 ) <= plugin.Config.GamemodeChance )
 			{
-				CurrentGamemode = ( Gamemode ) Plugin.EnabledList[rand.Next( Plugin.EnabledList.Count )];
+				CurrentGamemode = Plugin.EnabledList[rand.Next( Plugin.EnabledList.Count )];
 				switch ( CurrentGamemode )
 				{
 					case Gamemode.Dodgeball: Timing.RunCoroutine( DodgeBall() ); break;
 					case Gamemode.PeanutRaid: Timing.RunCoroutine( PeanutRaid() ); break;
 					case Gamemode.BlueScreenOfDeath: Timing.RunCoroutine( BlueScreenOfDeath() ); break;
 					case Gamemode.NightOfTheLivingNerd: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
-					case Gamemode.SCP682Containment: Timing.RunCoroutine( SCP682Containment() ); break;
 					case Gamemode.Randomizer: Timing.RunCoroutine( Randomizer() ); break;
 				}
 				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has started!</color>" );
