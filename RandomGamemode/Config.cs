@@ -34,5 +34,8 @@ namespace RandomGamemode
 
 		[Description( "Enable/disable the Locked In gamemode." )]
 		public bool LockedInEnabled { get; private set; } = true;
+
+		[Description( "Enable/disable the Infection gamemode." )]
+		public bool InfectionEnabled { get; private set; } = true;
 	}
 }

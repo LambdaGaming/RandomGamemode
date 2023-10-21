@@ -24,7 +24,8 @@ namespace RandomGamemode
 		NightOfTheLivingNerd,
 		Randomizer,
 		AnnoyingMimicry,
-		LockedIn
+		LockedIn,
+		Infection
 	}
 
 	public class EventHandlers
@@ -47,6 +48,7 @@ namespace RandomGamemode
 				case Gamemode.Randomizer: return "Randomizer";
 				case Gamemode.AnnoyingMimicry: return "Annoying Mimicry";
 				case Gamemode.LockedIn: return "Locked In";
+				case Gamemode.Infection: return "Infection";
 				default: return "Invalid Gamemode";
 			}
 		}
@@ -209,6 +211,16 @@ namespace RandomGamemode
 					ply.Role.Set( RoleTypeId.ClassD );
 			}
 		}
+
+		public IEnumerator<float> Infection()
+		{
+			yield return Timing.WaitForSeconds( 3f );
+			foreach ( Player ply in Player.List )
+			{
+				if ( ply.IsScp )
+					ply.Role.Set( RoleTypeId.Scp049 );
+			}
+		}
 		#endregion
 
 		#region Events
@@ -225,6 +237,7 @@ namespace RandomGamemode
 					case Gamemode.NightOfTheLivingNerd: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
 					case Gamemode.Randomizer: Timing.RunCoroutine( Randomizer() ); break;
 					case Gamemode.AnnoyingMimicry: Timing.RunCoroutine( AnnoyingMimicry() ); break;
+					case Gamemode.Infection: Timing.RunCoroutine( Infection() ); break;
 				}
 				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has started!</color>" );
 			}
@@ -340,10 +353,19 @@ namespace RandomGamemode
 
 		public void OnPlayerDied( DiedEventArgs ev )
 		{
-			// Respawn killed players as 939 for Annoying Mimicry gamemode
+			// Respawn killed players as 939 for Annoying Mimicry gamemode, and 049-2 for Infection
 			if ( CurrentGamemode == Gamemode.AnnoyingMimicry )
 			{
 				Timing.CallDelayed( 3, () => ev.Player.Role.Set( RoleTypeId.Scp939 ) );
+			}
+			else if ( CurrentGamemode == Gamemode.Infection )
+			{
+				Timing.CallDelayed( 3, () => {
+					ev.Player.Role.Set( RoleTypeId.Scp0492 );
+					ev.Player.Scale *= 1.15f;
+					ev.Player.MaxHealth = 400;
+					ev.Player.Health = 400;
+				} );
 			}
 		}
 

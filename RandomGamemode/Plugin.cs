@@ -45,6 +45,8 @@ namespace RandomGamemode
 				EnabledList.Add( Gamemode.AnnoyingMimicry );
 			if ( Config.LockedInEnabled )
 				EnabledList.Add( Gamemode.LockedIn );
+			if ( Config.InfectionEnabled )
+				EnabledList.Add( Gamemode.Infection );
 
 			Log.Info( "Successfully loaded." );
 		}
