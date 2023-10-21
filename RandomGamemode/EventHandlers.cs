@@ -79,82 +79,64 @@ namespace RandomGamemode
 
 		public IEnumerator<float> PeanutRaid()
 		{
-			List<Player> PlyList = new List<Player>();
 			yield return Timing.WaitForSeconds( 3f );
-
 			foreach ( Player ply in Player.List )
 			{
-				PlyList.Add( ply );
+				if ( ply.IsScp )
+				{
+					ply.Role.Set( RoleTypeId.ClassD );
+					yield return Timing.WaitForSeconds( 0.5f );
+					ply.Scale *= 0.5f;
+				}
+				else
+				{
+					ply.Role.Set( RoleTypeId.Scp173 );
+				}
 			}
-
-			yield return Timing.WaitForSeconds( 1f );
-			int RandPly = rand.Next( PlyList.Count );
-			Player SelectedDBoi = PlyList[RandPly];
-			SelectedDBoi.Role.Set( RoleTypeId.ClassD );
-			PlyList.RemoveAt( RandPly );
-
-			foreach ( Player ply in PlyList )
-			{
-				ply.Role.Set( RoleTypeId.Scp173 );
-			}
-
-			yield return Timing.WaitForSeconds( 0.5f );
-			SelectedDBoi.Scale *= 0.5f;
 		}
 
 		public IEnumerator<float> BlueScreenOfDeath()
 		{
-			List<Player> PlyList = new List<Player>();
 			yield return Timing.WaitForSeconds( 3f );
-
 			foreach ( Player ply in Player.List )
 			{
-				PlyList.Add( ply );
-			}
-
-			int RandPly = rand.Next( PlyList.Count );
-			Player pc = PlyList[RandPly];
-			pc.Role.Set( RoleTypeId.Scp079 );
-			( pc.Role as Scp079Role ).Level = 3;
-			PlyList.RemoveAt( RandPly );
-
-			foreach ( Player ply in PlyList )
-			{
-				ply.Role.Set( RoleTypeId.Scientist );
-				ply.ClearInventory();
+				if ( ply.IsScp )
+				{
+					ply.Role.Set( RoleTypeId.Scp079 );
+					( ply.Role as Scp079Role ).Level = 3;
+				}
+				else
+				{
+					ply.Role.Set( RoleTypeId.Scientist );
+					ply.ClearInventory();
+				}
 			}
 		}
 
 		public IEnumerator<float> NightOfTheLivingNerd()
 		{
-			List<Player> PlyList = new List<Player>();
 			yield return Timing.WaitForSeconds( 3f );
-
 			foreach ( Player ply in Player.List )
 			{
-				PlyList.Add( ply );
+				if ( ply.IsScp )
+				{
+					ply.Role.Set( RoleTypeId.Scientist );
+					ply.ClearInventory();
+					ply.AddItem( ItemType.GunLogicer );
+					ply.AddItem( ItemType.Flashlight );
+					ply.AddItem( ItemType.KeycardFacilityManager );
+					ply.SetAmmo( AmmoType.Nato762, 1000 );
+					ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.Scp939 ).Position;
+					ply.EnableEffect( EffectType.MovementBoost );
+				}
+				else
+				{
+					ply.Role.Set( RoleTypeId.ClassD );
+					ply.AddItem( ItemType.Flashlight );
+					ply.AddItem( ItemType.SCP268 );
+				}
 			}
-
-			yield return Timing.WaitForSeconds( 1f );
-			int RandPly = rand.Next( PlyList.Count );
-			Player SelectedNerd = PlyList[RandPly];
-			SelectedNerd.Role.Set( RoleTypeId.Scientist );
-			SelectedNerd.ClearInventory();
-			SelectedNerd.AddItem( ItemType.GunLogicer );
-			SelectedNerd.AddItem( ItemType.Flashlight );
-			SelectedNerd.AddItem( ItemType.KeycardFacilityManager );
-			SelectedNerd.SetAmmo( AmmoType.Nato762, 1000 );
-			SelectedNerd.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.Scp939 ).Position;
-			SelectedNerd.EnableEffect( EffectType.MovementBoost );
-			PlyList.RemoveAt( RandPly );
 			Map.TurnOffAllLights( 5000 );
-
-			foreach ( Player ply in PlyList )
-			{
-				ply.Role.Set( RoleTypeId.ClassD );
-				ply.AddItem( ItemType.Flashlight );
-				ply.AddItem( ItemType.SCP268 );
-			}
 		}
 
 		public IEnumerator<float> Randomizer()
@@ -182,15 +164,14 @@ namespace RandomGamemode
 
 			yield return Timing.WaitForSeconds( 1f );
 
-			int RandPly = rand.Next( PlyList.Count );
-			Player scp = PlyList[RandPly];
-			scp.Role.Set( scps[rand.Next( scps.Length )] );
-			PlyList.RemoveAt( RandPly );
+			Player scp = PlyList.RandomItem();
+			scp.Role.Set( scps.RandomItem() );
+			PlyList.RemoveAt( PlyList.IndexOf( scp ) );
 
 			// Set random roles for the rest of the players
 			foreach ( Player ply in PlyList )
 			{
-				ply.Role.Set( roles[rand.Next( roles.Length )] );
+				ply.Role.Set( roles.RandomItem() );
 			}
 
 			yield return Timing.WaitForSeconds( 1f );
@@ -199,19 +180,9 @@ namespace RandomGamemode
 			foreach ( Player ply in Player.List )
 			{
 				if ( ply.Role == RoleTypeId.Scp0492 )
-				{
 					ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.ClassD ).Position;
-				}
 				else
-				{
-					Vector3 pos = RoleExtensions.GetRandomSpawnLocation( ( RoleTypeId ) rand.Next( roles.Length ) ).Position;
-					while ( pos == Vector3.zero || pos == RoleExtensions.GetRandomSpawnLocation( RoleTypeId.Scp079 ).Position )
-					{
-						// Prevent players from spawning in areas they can't escape
-						pos = RoleExtensions.GetRandomSpawnLocation( ( RoleTypeId ) rand.Next( roles.Length ) ).Position;
-					}
-					ply.Position = pos;
-				}
+					ply.Position = RoleExtensions.GetRandomSpawnLocation( roles.RandomItem() ).Position;
 			}
 
 			// Set random inventory items
@@ -245,7 +216,7 @@ namespace RandomGamemode
 		{
 			if ( rand.Next( 1, 101 ) <= plugin.Config.GamemodeChance )
 			{
-				CurrentGamemode = Plugin.EnabledList[rand.Next( Plugin.EnabledList.Count )];
+				CurrentGamemode = Plugin.EnabledList.RandomItem();
 				switch ( CurrentGamemode )
 				{
 					case Gamemode.Dodgeball: Timing.RunCoroutine( DodgeBall() ); break;
