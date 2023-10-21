@@ -47,24 +47,7 @@ namespace RandomGamemode
 			}
 		}
 
-		public void OnRoundStart()
-		{
-			if ( rand.Next( 1, 101 ) <= plugin.Config.GamemodeChance )
-			{
-				CurrentGamemode = ( Gamemode ) Plugin.EnabledList[rand.Next( Plugin.EnabledList.Count )];
-				switch ( CurrentGamemode )
-				{
-					case Gamemode.Dodgeball: Timing.RunCoroutine( DodgeBall() ); break;
-					case Gamemode.PeanutRaid: Timing.RunCoroutine( PeanutRaid() ); break;
-					case Gamemode.GoldfishAttacks: Timing.RunCoroutine( GoldfishAttacks() ); break;
-					case Gamemode.NightOfTheLivingNerd: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
-					case Gamemode.SCP682Containment: Timing.RunCoroutine( SCP682Containment() ); break;
-					case Gamemode.Randomizer: Timing.RunCoroutine( Randomizer() ); break;
-				}
-				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has started!</color>" );
-			}
-		}
-
+		#region Gamemodes
 		public IEnumerator<float> DodgeBall()
 		{
 			FriendlyFireDefault = ServerConsole.FriendlyFire;
@@ -87,24 +70,6 @@ namespace RandomGamemode
 				}
 
 				ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.NtfCaptain ).Position;
-			}
-		}
-
-		public void OnGrenadeThrown( ThrownProjectileEventArgs ev )
-		{
-			if ( CurrentGamemode == Gamemode.Dodgeball && ev.Projectile.ProjectileType == ProjectileType.Scp018 )
-			{
-				ev.Projectile.Scale *= 3;
-				( ev.Projectile as Scp018Projectile ).FuseTime = 1;
-				ev.Player.AddItem( ItemType.SCP018 );
-			}
-		}
-
-		public void OnItemDropped( DroppingItemEventArgs ev )
-		{
-			if ( CurrentGamemode == Gamemode.Dodgeball )
-			{
-				ev.IsAllowed = false;
 			}
 		}
 
@@ -131,14 +96,6 @@ namespace RandomGamemode
 
 			yield return Timing.WaitForSeconds( 0.5f );
 			SelectedDBoi.Scale /= 2;
-		}
-
-		public void OnPlayerJoin( JoinedEventArgs ev )
-		{
-			if ( CurrentGamemode == Gamemode.PeanutRaid )
-			{
-				ev.Player.Role.Set( RoleTypeId.Scp173 );
-			}
 		}
 
 		public IEnumerator<float> GoldfishAttacks()
@@ -294,6 +251,26 @@ namespace RandomGamemode
 				}
 			}
 		}
+		#endregion
+
+		#region Events
+		public void OnRoundStart()
+		{
+			if ( rand.Next( 1, 101 ) <= plugin.Config.GamemodeChance )
+			{
+				CurrentGamemode = ( Gamemode ) Plugin.EnabledList[rand.Next( Plugin.EnabledList.Count )];
+				switch ( CurrentGamemode )
+				{
+					case Gamemode.Dodgeball: Timing.RunCoroutine( DodgeBall() ); break;
+					case Gamemode.PeanutRaid: Timing.RunCoroutine( PeanutRaid() ); break;
+					case Gamemode.GoldfishAttacks: Timing.RunCoroutine( GoldfishAttacks() ); break;
+					case Gamemode.NightOfTheLivingNerd: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
+					case Gamemode.SCP682Containment: Timing.RunCoroutine( SCP682Containment() ); break;
+					case Gamemode.Randomizer: Timing.RunCoroutine( Randomizer() ); break;
+				}
+				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has started!</color>" );
+			}
+		}
 
 		// Prevents randomizer round from ending if everyone is on the same team
 		public void OnRoundEnding( EndingRoundEventArgs ev )
@@ -320,5 +297,32 @@ namespace RandomGamemode
 				ServerConsole.FriendlyFire = FriendlyFireDefault;
 			}
 		}
+
+		public void OnGrenadeThrown( ThrownProjectileEventArgs ev )
+		{
+			if ( CurrentGamemode == Gamemode.Dodgeball && ev.Projectile.ProjectileType == ProjectileType.Scp018 )
+			{
+				ev.Projectile.Scale *= 3;
+				( ev.Projectile as Scp018Projectile ).FuseTime = 1;
+				ev.Player.AddItem( ItemType.SCP018 );
+			}
+		}
+
+		public void OnItemDropped( DroppingItemEventArgs ev )
+		{
+			if ( CurrentGamemode == Gamemode.Dodgeball )
+			{
+				ev.IsAllowed = false;
+			}
+		}
+
+		public void OnPlayerJoin( JoinedEventArgs ev )
+		{
+			if ( CurrentGamemode == Gamemode.PeanutRaid )
+			{
+				ev.Player.Role.Set( RoleTypeId.Scp173 );
+			}
+		}
+		#endregion
 	}
 }
