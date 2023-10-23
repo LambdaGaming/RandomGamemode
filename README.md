@@ -4,7 +4,6 @@
 ## Dodgeball
 - Players spawn as either Class D, Scientist, or Guard on the surface at the MTF spawn
 - Everyone gets unlimited SCP-018s with shortened fuse times
-- Win conditions are unchanged
 
 ## Peanut Raid
 - All SCPs are switched to Class D's, everyone else is switched to SCP-173
@@ -35,19 +34,21 @@
 - When a Class D is killed by 939, they will also become 939
 - MTF and Chaos spawning is disabled, and players cannot escape to surface
 - Jailbirds spawn in the 049/173 spawn area, so the Class D's have a chance to fight back if they can make it there
-- The round will end when all players are SCPs or the Class Ds manage to kill all SCPs
 
 ## Locked In
 - Light containment never goes into its decontamination phase, and Gate A and B are permanently locked
 - With light containment always available and nobody able to escape or activate the nuke, the round will play out very differently
 - MTF and Chaos spawn at different locations; MTF spawns in entrance zone and Chaos spawns in a random heavy containment SCP chamber
-- Win conditions are unchanged
 
 ## Infection
 - All SCPs are switched to 049
 - SCP-049-2's are larger and have more health
 - Players who die are automatically revived as SCP-049-2
-- Win conditions are unchanged
+
+## Living Like Larry
+- All SCPs are switched to Class D, everyone else is switched to SCP-106
+- SCP-106's spawn at the top of 173's old spawn room, Class D's spawn at the bottom
+- Class D's start with an O5 keycard, and must escape and become Chaos while being chased by the hoard of Larry's
 
 # Notes:
 - See your EXILED config for options to change specific gamemode settings. (Make sure you run the server at least once with the plugin so the configs generate.)

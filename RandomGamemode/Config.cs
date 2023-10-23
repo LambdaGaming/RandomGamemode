@@ -37,5 +37,8 @@ namespace RandomGamemode
 
 		[Description( "Enable/disable the Infection gamemode." )]
 		public bool InfectionEnabled { get; private set; } = true;
+
+		[Description( "Enable/disable the Living Like Larry gamemode." )]
+		public bool LivingLikeLarryEnabled { get; private set; } = true;
 	}
 }

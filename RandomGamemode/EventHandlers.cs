@@ -1,6 +1,7 @@
 ﻿using Exiled.API.Enums;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
+using Exiled.API.Features.Doors;
 using Exiled.API.Features.Pickups;
 using Exiled.API.Features.Pickups.Projectiles;
 using Exiled.API.Features.Roles;
@@ -26,7 +27,8 @@ namespace RandomGamemode
 		Randomizer,
 		AnnoyingMimicry,
 		LockedIn,
-		Infection
+		Infection,
+		LivingLikeLarry
 	}
 
 	public class EventHandlers
@@ -50,6 +52,7 @@ namespace RandomGamemode
 				case Gamemode.AnnoyingMimicry: return "Annoying Mimicry";
 				case Gamemode.LockedIn: return "Locked In";
 				case Gamemode.Infection: return "Infection";
+				case Gamemode.LivingLikeLarry: return "Living Like Larry";
 				default: return "Invalid Gamemode";
 			}
 		}
@@ -227,6 +230,25 @@ namespace RandomGamemode
 					ply.Role.Set( RoleTypeId.Scp049 );
 			}
 		}
+
+		public IEnumerator<float> LivingLikeLarry()
+		{
+			yield return Timing.WaitForSeconds( 3f );
+			foreach ( Player ply in Player.List )
+			{
+				if ( ply.IsScp )
+				{
+					ply.Role.Set( RoleTypeId.ClassD );
+					ply.Position = Door.Get( DoorType.Scp173Bottom ).Position + Vector3.up * 2;
+					ply.AddItem( ItemType.KeycardO5 );
+				}
+				else
+				{
+					ply.Role.Set( RoleTypeId.Scp106 );
+					ply.Position = Door.Get( DoorType.Scp173Gate ).Position + Vector3.up * 2;
+				}
+			}
+		}
 		#endregion
 
 		#region Events
@@ -244,6 +266,7 @@ namespace RandomGamemode
 					case Gamemode.Randomizer: Timing.RunCoroutine( Randomizer() ); break;
 					case Gamemode.AnnoyingMimicry: Timing.RunCoroutine( AnnoyingMimicry() ); break;
 					case Gamemode.Infection: Timing.RunCoroutine( Infection() ); break;
+					case Gamemode.LivingLikeLarry: Timing.RunCoroutine( LivingLikeLarry() ); break;
 				}
 				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has started!</color>" );
 			}
