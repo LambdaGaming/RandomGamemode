@@ -34,6 +34,7 @@
 - All SCPs are switched to 939, everyone else becomes Class D
 - When a Class D is killed by 939, they will also become 939
 - MTF and Chaos spawning is disabled, and players cannot escape to surface
+- Jailbirds spawn in the 049/173 spawn area, so the Class D's have a chance to fight back if they can make it there
 - The round will end when all players are SCPs or the Class Ds manage to kill all SCPs
 
 ## Locked In

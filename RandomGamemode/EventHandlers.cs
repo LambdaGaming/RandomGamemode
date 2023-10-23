@@ -1,6 +1,7 @@
 ﻿using Exiled.API.Enums;
 using Exiled.API.Extensions;
 using Exiled.API.Features;
+using Exiled.API.Features.Pickups;
 using Exiled.API.Features.Pickups.Projectiles;
 using Exiled.API.Features.Roles;
 using Exiled.Events.EventArgs.Map;
@@ -203,12 +204,17 @@ namespace RandomGamemode
 		public IEnumerator<float> AnnoyingMimicry()
 		{
 			yield return Timing.WaitForSeconds( 3f );
+			int count = 0;
 			foreach ( Player ply in Player.List )
 			{
 				if ( ply.IsScp )
 					ply.Role.Set( RoleTypeId.Scp939 );
 				else
 					ply.Role.Set( RoleTypeId.ClassD );
+
+				Vector3 pos = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.Scp173 ).Position;
+				Pickup.CreateAndSpawn( ItemType.Jailbird, pos + new Vector3( 0, 0, count + 10 ), new Quaternion( 0, 0, 0, 0 ) );
+				count++;
 			}
 		}
 
