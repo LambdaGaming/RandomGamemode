@@ -117,6 +117,7 @@ namespace RandomGamemode
 					ply.ClearInventory();
 				}
 			}
+			Map.ChangeLightsColor( Color.blue );
 		}
 
 		public IEnumerator<float> NightOfTheLivingNerd()
@@ -316,15 +317,6 @@ namespace RandomGamemode
 			if ( CurrentGamemode == Gamemode.Dodgeball )
 			{
 				ev.IsAllowed = false;
-			}
-		}
-
-		public void OnChangeCamera( ChangingCameraEventArgs ev )
-		{
-			// Set room light color to blue when 079 views it
-			if ( CurrentGamemode == Gamemode.BlueScreenOfDeath )
-			{
-				ev.Camera.Room.RoomLightController.NetworkOverrideColor = Color.blue;
 			}
 		}
 
