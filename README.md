@@ -13,8 +13,8 @@
 - All SCPs are switched to SCP-079, everyone else is switched to Scientist
 - SCP-079 starts off at level 3, scientists start with nothing
 - Scientists need to work together to obtain keycards and access heavy containment to kill SCP-079, before 079 can kill them
-- Generators take 5 minutes to activate instead of the default 3 minutes
 - All lights on the map will turn blue
+- The round will end after 15 minutes if 079 isn't killed in time
 
 ## Night of the Living Nerd
 - All SCPs are switched to Scientist, everyone else is switched to Class D

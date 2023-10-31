@@ -40,7 +40,7 @@ namespace RandomGamemode
 
 		public EventHandlers( Plugin plugin ) => this.plugin = plugin;
 
-		public string GetGamemodeName()
+		private string GetGamemodeName()
 		{
 			switch ( CurrentGamemode )
 			{
@@ -55,6 +55,12 @@ namespace RandomGamemode
 				case Gamemode.LivingLikeLarry: return "Living Like Larry";
 				default: return "Invalid Gamemode";
 			}
+		}
+
+		private IEnumerator<float> DelayedRoundEnd( float delay )
+		{
+			yield return Timing.WaitForSeconds( delay );
+			Round.EndRound( true );
 		}
 
 		#region Gamemodes
@@ -271,6 +277,10 @@ namespace RandomGamemode
 				}
 				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has started!</color>" );
 			}
+			if ( CurrentGamemode == Gamemode.BlueScreenOfDeath )
+			{
+				Timing.RunCoroutine( DelayedRoundEnd( 900 ), "DelayedRoundEnd" );
+			}
 		}
 		
 		public void OnRoundEnding( EndingRoundEventArgs ev )
@@ -297,6 +307,7 @@ namespace RandomGamemode
 				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has ended.</color>" );
 				CurrentGamemode = 0;
 				ServerConsole.FriendlyFire = FriendlyFireDefault;
+				Timing.KillCoroutines( "DelayedRoundEnd" );
 			}
 		}
 
@@ -317,15 +328,6 @@ namespace RandomGamemode
 			if ( CurrentGamemode == Gamemode.Dodgeball )
 			{
 				ev.IsAllowed = false;
-			}
-		}
-
-		public void OnGeneratorActivate( ActivatingGeneratorEventArgs ev )
-		{
-			// Set generator activation time to 5 minutes
-			if ( CurrentGamemode == Gamemode.BlueScreenOfDeath )
-			{
-				ev.Generator.ActivationTime = 300;
 			}
 		}
 

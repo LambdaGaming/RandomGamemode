@@ -9,7 +9,7 @@ namespace RandomGamemode
 	public class Plugin : Plugin<Config>
 	{
 		private EventHandlers EventHandlers;
-		public override Version Version { get; } = new Version( 2, 2, 0 );
+		public override Version Version { get; } = new Version( 2, 3, 0 );
 		public override Version RequiredExiledVersion { get; } = new Version( 8, 3, 0 );
 		public override PluginPriority Priority { get; } = PluginPriority.Medium;
 		internal static List<Gamemode> EnabledList = new List<Gamemode>();
@@ -23,7 +23,6 @@ namespace RandomGamemode
 			events.Player.ThrownProjectile += EventHandlers.OnGrenadeThrown;
 			events.Player.DroppingItem += EventHandlers.OnItemDropped;
 			events.Server.EndingRound += EventHandlers.OnRoundEnding;
-			events.Player.ActivatingGenerator += EventHandlers.OnGeneratorActivate;
 			events.Player.StoppingGenerator += EventHandlers.OnGeneratorDeactivate;
 			events.Server.RespawningTeam += EventHandlers.OnRespawn;
 			events.Player.Died += EventHandlers.OnPlayerDied;
@@ -60,7 +59,6 @@ namespace RandomGamemode
 			events.Player.ThrownProjectile -= EventHandlers.OnGrenadeThrown;
 			events.Player.DroppingItem -= EventHandlers.OnItemDropped;
 			events.Server.EndingRound -= EventHandlers.OnRoundEnding;
-			events.Player.ActivatingGenerator -= EventHandlers.OnGeneratorActivate;
 			events.Player.StoppingGenerator -= EventHandlers.OnGeneratorDeactivate;
 			events.Server.RespawningTeam -= EventHandlers.OnRespawn;
 			events.Player.Died -= EventHandlers.OnPlayerDied;
