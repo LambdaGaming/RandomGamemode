@@ -42,11 +42,11 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Exiled.API">
-      <HintPath>\\server-pc\Users\starw\AppData\Roaming\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
+      <HintPath>\\server-pc\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Exiled.Events">
-      <HintPath>\\server-pc\Users\starw\AppData\Roaming\EXILED\Plugins\Exiled.Events.dll</HintPath>
+      <HintPath>\\server-pc\EXILED\Plugins\Exiled.Events.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />

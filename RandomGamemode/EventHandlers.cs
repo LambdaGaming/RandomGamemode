@@ -7,7 +7,6 @@ using Exiled.API.Features.Pickups.Projectiles;
 using Exiled.API.Features.Roles;
 using Exiled.Events.EventArgs.Map;
 using Exiled.Events.EventArgs.Player;
-using Exiled.Events.EventArgs.Scp079;
 using Exiled.Events.EventArgs.Server;
 using MEC;
 using PlayerRoles;
@@ -395,7 +394,7 @@ namespace RandomGamemode
 		public void OnDoorUse( InteractingDoorEventArgs ev )
 		{
 			// Disable using gates for Annoying Mimicry and Locked In gamemodes
-			if ( ( CurrentGamemode == Gamemode.AnnoyingMimicry || CurrentGamemode == Gamemode.LockedIn ) && ev.Door.IsGate )
+			if ( ( CurrentGamemode == Gamemode.AnnoyingMimicry || CurrentGamemode == Gamemode.LockedIn ) && ( ev.Door == Door.Get( "GATE_A" ) || ev.Door == Door.Get( "GATE_B" ) ) )
 			{
 				ev.IsAllowed = false;
 			}
