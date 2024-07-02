@@ -9,8 +9,9 @@ namespace RandomGamemode
 	public class Plugin : Plugin<Config>
 	{
 		private EventHandlers EventHandlers;
-		public override Version Version { get; } = new Version( 2, 3, 1 );
-		public override Version RequiredExiledVersion { get; } = new Version( 8, 3, 0 );
+		public override Version Version { get; } = new Version( 2, 4, 0 );
+		public override Version RequiredExiledVersion { get; } = new Version( 9, 0, 0 );
+		public override string Author { get; } = "OPGman";
 		public override PluginPriority Priority { get; } = PluginPriority.Medium;
 		internal static List<Gamemode> EnabledList = new List<Gamemode>();
 
@@ -47,8 +48,6 @@ namespace RandomGamemode
 				EnabledList.Add( Gamemode.Infection );
 			if ( Config.LivingLikeLarryEnabled )
 				EnabledList.Add( Gamemode.LivingLikeLarry );
-
-			Log.Info( "Successfully loaded." );
 		}
 
 		public override void OnDisabled()
