@@ -294,7 +294,7 @@ namespace RandomGamemode
 
 			if ( CurrentGamemode == Gamemode.Randomizer && totalalive > 1 )
 			{
-				ev.IsRoundEnded = false;
+				ev.IsAllowed = false;
 			}
 		}
 
