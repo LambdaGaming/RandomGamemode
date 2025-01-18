@@ -9,8 +9,8 @@ namespace RandomGamemode
 	public class Plugin : Plugin<Config>
 	{
 		private EventHandlers EventHandlers;
-		public override Version Version { get; } = new Version( 2, 4, 0 );
-		public override Version RequiredExiledVersion { get; } = new Version( 9, 0, 0 );
+		public override Version Version { get; } = new Version( 2, 4, 1 );
+		public override Version RequiredExiledVersion { get; } = new Version( 9, 4, 0 );
 		public override string Author { get; } = "OPGman";
 		public override PluginPriority Priority { get; } = PluginPriority.Medium;
 		internal static List<Gamemode> EnabledList = new List<Gamemode>();

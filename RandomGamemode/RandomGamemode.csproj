@@ -42,7 +42,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Exiled.API">
-      <HintPath>\\server-pc\EXILED\Plugins\dependencies\Exiled.API.dll</HintPath>
+      <HintPath>\\server-pc\SCPSL\PluginAPI\plugins\global\dependencies\Exiled.API.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Exiled.Events">

@@ -2,7 +2,6 @@
 using Exiled.API.Extensions;
 using Exiled.API.Features;
 using Exiled.API.Features.Doors;
-using Exiled.API.Features.Pickups;
 using Exiled.API.Features.Pickups.Projectiles;
 using Exiled.API.Features.Roles;
 using Exiled.Events.EventArgs.Map;
@@ -348,7 +347,7 @@ namespace RandomGamemode
 			}
 			else if ( CurrentGamemode == Gamemode.LockedIn )
 			{
-				if ( ev.NextKnownTeam == Respawning.SpawnableTeamType.NineTailedFox )
+				if ( ev.Wave.Team == Team.FoundationForces )
 				{
 					Timing.CallDelayed( 3, () => {
 						foreach( Player ply in ev.Players )
@@ -357,7 +356,7 @@ namespace RandomGamemode
 						}
 					} );
 				}
-				else if ( ev.NextKnownTeam == Respawning.SpawnableTeamType.ChaosInsurgency )
+				else if ( ev.Wave.Team == Team.ChaosInsurgency )
 				{
 					Timing.CallDelayed( 3, () => {
 						foreach ( Player ply in ev.Players )
