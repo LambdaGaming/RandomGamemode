@@ -9,7 +9,7 @@ namespace RandomGamemode
 	public class Plugin : Plugin<Config>
 	{
 		private EventHandlers EventHandlers;
-		public override Version Version { get; } = new Version( 2, 4, 1 );
+		public override Version Version { get; } = new Version( 2, 5, 0 );
 		public override Version RequiredExiledVersion { get; } = new Version( 9, 4, 0 );
 		public override string Author { get; } = "OPGman";
 		public override PluginPriority Priority { get; } = PluginPriority.Medium;
@@ -30,7 +30,8 @@ namespace RandomGamemode
 			events.Player.InteractingDoor += EventHandlers.OnDoorUse;
 			events.Map.Decontaminating += EventHandlers.OnDecon;
 
-			if ( Config.DodgeBallEnabled ) // This ensures that the chances of a gamemode being selected are still the same, even if some are disabled
+			// This ensures that the chances of a gamemode being selected are still the same, even if some are disabled
+			if ( Config.DodgeBallEnabled )
 				EnabledList.Add( Gamemode.Dodgeball );
 			if ( Config.PeanutRaidEnabled )
 				EnabledList.Add( Gamemode.PeanutRaid );

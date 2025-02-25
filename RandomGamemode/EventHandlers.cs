@@ -273,7 +273,7 @@ namespace RandomGamemode
 					case Gamemode.Infection: Timing.RunCoroutine( Infection() ); break;
 					case Gamemode.LivingLikeLarry: Timing.RunCoroutine( LivingLikeLarry() ); break;
 				}
-				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has started!</color>" );
+				Map.Broadcast( 6, string.Format( plugin.Config.StartText, GetGamemodeName() ) );
 			}
 			if ( CurrentGamemode == Gamemode.BlueScreenOfDeath )
 			{
@@ -302,7 +302,7 @@ namespace RandomGamemode
 			// Broadcast that the gamemode has ended
 			if ( CurrentGamemode > 0 )
 			{
-				Map.Broadcast( 6, "<color=red>The " + GetGamemodeName() + " round has ended.</color>" );
+				Map.Broadcast( 6, string.Format( plugin.Config.EndText, GetGamemodeName() ) );
 				CurrentGamemode = 0;
 				ServerConsole.FriendlyFire = FriendlyFireDefault;
 				Timing.KillCoroutines( "DelayedRoundEnd" );

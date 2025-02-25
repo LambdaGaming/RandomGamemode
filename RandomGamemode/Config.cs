@@ -14,6 +14,12 @@ namespace RandomGamemode
 		[Description( "Chance of a gamemode being activated at the start of every round. Must be a whole number." )]
 		public int GamemodeChance { get; private set; } = 10;
 
+		[Description( "Text that displays when a gamemode round starts. Use {0} for the name of the gamemode." )]
+		public string StartText { get; private set; } = "<color=red>The {0} round has started!</color>";
+
+		[Description( "Text that displays when a gamemode round ends. Use {0} for the name of the gamemode." )]
+		public string EndText { get; private set; } = "<color=red>The {0} round has ended.</color>";
+
 		[Description( "Enable/disable the Dodgeball gamemode." )]
 		public bool DodgeBallEnabled { get; private set; } = true;
 
