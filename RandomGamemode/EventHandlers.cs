@@ -38,6 +38,23 @@ namespace RandomGamemode
 
 		public EventHandlers( Plugin plugin ) => this.plugin = plugin;
 
+		private void StartGamemode( Gamemode gm )
+		{
+			CurrentGamemode = gm;
+			switch ( gm )
+			{
+				case Gamemode.Dodgeball: Timing.RunCoroutine( DodgeBall() ); break;
+				case Gamemode.PeanutRaid: Timing.RunCoroutine( PeanutRaid() ); break;
+				case Gamemode.BlueScreenOfDeath: Timing.RunCoroutine( BlueScreenOfDeath() ); break;
+				case Gamemode.NightOfTheLivingNerd: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
+				case Gamemode.Randomizer: Timing.RunCoroutine( Randomizer() ); break;
+				case Gamemode.AnnoyingMimicry: Timing.RunCoroutine( AnnoyingMimicry() ); break;
+				case Gamemode.Infection: Timing.RunCoroutine( Infection() ); break;
+				case Gamemode.LivingLikeLarry: Timing.RunCoroutine( LivingLikeLarry() ); break;
+			}
+			Map.Broadcast( 6, string.Format( plugin.Config.StartText, Plugin.GetGamemodeName( CurrentGamemode ) ) );
+		}
+
 		private IEnumerator<float> DelayedRoundEnd( float delay )
 		{
 			yield return Timing.WaitForSeconds( delay );
@@ -242,21 +259,15 @@ namespace RandomGamemode
 		#region Events
 		public void OnRoundStart()
 		{
-			if ( rand.Next( 1, 101 ) <= plugin.Config.GamemodeChance )
+			if ( Plugin.NextGamemode != Gamemode.Invalid )
+			{
+				StartGamemode( Plugin.NextGamemode );
+				Plugin.NextGamemode = Gamemode.Invalid;
+			}
+			else if ( rand.Next( 1, 101 ) <= plugin.Config.GamemodeChance )
 			{
 				CurrentGamemode = Plugin.EnabledList.RandomItem();
-				switch ( CurrentGamemode )
-				{
-					case Gamemode.Dodgeball: Timing.RunCoroutine( DodgeBall() ); break;
-					case Gamemode.PeanutRaid: Timing.RunCoroutine( PeanutRaid() ); break;
-					case Gamemode.BlueScreenOfDeath: Timing.RunCoroutine( BlueScreenOfDeath() ); break;
-					case Gamemode.NightOfTheLivingNerd: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
-					case Gamemode.Randomizer: Timing.RunCoroutine( Randomizer() ); break;
-					case Gamemode.AnnoyingMimicry: Timing.RunCoroutine( AnnoyingMimicry() ); break;
-					case Gamemode.Infection: Timing.RunCoroutine( Infection() ); break;
-					case Gamemode.LivingLikeLarry: Timing.RunCoroutine( LivingLikeLarry() ); break;
-				}
-				Map.Broadcast( 6, string.Format( plugin.Config.StartText, Plugin.GetGamemodeName( CurrentGamemode ) ) );
+				StartGamemode( CurrentGamemode );
 			}
 			if ( CurrentGamemode == Gamemode.BlueScreenOfDeath )
 			{
