@@ -14,6 +14,24 @@ namespace RandomGamemode
 		public override string Author { get; } = "OPGman";
 		public override PluginPriority Priority { get; } = PluginPriority.Medium;
 		internal static List<Gamemode> EnabledList = new List<Gamemode>();
+		internal static Gamemode NextGamemode = Gamemode.Invalid;
+
+		internal static string GetGamemodeName( Gamemode gm )
+		{
+			switch ( gm )
+			{
+				case Gamemode.Dodgeball: return "Dodgeball";
+				case Gamemode.PeanutRaid: return "Peanut Raid";
+				case Gamemode.BlueScreenOfDeath: return "Blue Screen of Death";
+				case Gamemode.NightOfTheLivingNerd: return "Night of the Living Nerd";
+				case Gamemode.Randomizer: return "Randomizer";
+				case Gamemode.AnnoyingMimicry: return "Annoying Mimicry";
+				case Gamemode.LockedIn: return "Locked In";
+				case Gamemode.Infection: return "Infection";
+				case Gamemode.LivingLikeLarry: return "Living Like Larry";
+				default: return "Invalid Gamemode";
+			}
+		}
 
 		public override void OnEnabled()
 		{

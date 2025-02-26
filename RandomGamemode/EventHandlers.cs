@@ -38,23 +38,6 @@ namespace RandomGamemode
 
 		public EventHandlers( Plugin plugin ) => this.plugin = plugin;
 
-		private string GetGamemodeName()
-		{
-			switch ( CurrentGamemode )
-			{
-				case Gamemode.Dodgeball: return "Dodgeball";
-				case Gamemode.PeanutRaid: return "Peanut Raid";
-				case Gamemode.BlueScreenOfDeath: return "Blue Screen of Death";
-				case Gamemode.NightOfTheLivingNerd: return "Night of the Living Nerd";
-				case Gamemode.Randomizer: return "Randomizer";
-				case Gamemode.AnnoyingMimicry: return "Annoying Mimicry";
-				case Gamemode.LockedIn: return "Locked In";
-				case Gamemode.Infection: return "Infection";
-				case Gamemode.LivingLikeLarry: return "Living Like Larry";
-				default: return "Invalid Gamemode";
-			}
-		}
-
 		private IEnumerator<float> DelayedRoundEnd( float delay )
 		{
 			yield return Timing.WaitForSeconds( delay );
@@ -273,7 +256,7 @@ namespace RandomGamemode
 					case Gamemode.Infection: Timing.RunCoroutine( Infection() ); break;
 					case Gamemode.LivingLikeLarry: Timing.RunCoroutine( LivingLikeLarry() ); break;
 				}
-				Map.Broadcast( 6, string.Format( plugin.Config.StartText, GetGamemodeName() ) );
+				Map.Broadcast( 6, string.Format( plugin.Config.StartText, Plugin.GetGamemodeName( CurrentGamemode ) ) );
 			}
 			if ( CurrentGamemode == Gamemode.BlueScreenOfDeath )
 			{
@@ -302,7 +285,7 @@ namespace RandomGamemode
 			// Broadcast that the gamemode has ended
 			if ( CurrentGamemode > 0 )
 			{
-				Map.Broadcast( 6, string.Format( plugin.Config.EndText, GetGamemodeName() ) );
+				Map.Broadcast( 6, string.Format( plugin.Config.EndText, Plugin.GetGamemodeName( CurrentGamemode ) ) );
 				CurrentGamemode = 0;
 				ServerConsole.FriendlyFire = FriendlyFireDefault;
 				Timing.KillCoroutines( "DelayedRoundEnd" );
