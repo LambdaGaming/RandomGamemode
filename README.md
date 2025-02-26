@@ -50,8 +50,13 @@
 - SCP-106's spawn at the top of 173's old spawn room, Class D's spawn at the bottom
 - Class D's start with an O5 keycard, and must escape and become Chaos while being chased by the hoard of Larry's
 
-# Notes:
-- See your EXILED config for options to change specific gamemode settings. (Make sure you run the server at least once with the plugin so the configs generate.)
+# Commands
+## forcegamemode
+- Forces the next round to start with a gamemode
+- Available to owners and admins
+- Accepts a number as an optional argument to set a specific gamemode (Number must correspond to a valid gamemode in the order listed here, starting from 1)
+- A random gamemode will be chosen if no argument is provided
+- Set the number argument to 0 to unset a forced gamemode round
 
 # Issues & Pull Requests
  If you would like to contribute to this repository by creating an issue or pull request, please refer to the [contributing guidelines.](https://lambdagaming.github.io/contributing.html)
