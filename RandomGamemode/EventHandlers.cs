@@ -49,6 +49,7 @@ namespace RandomGamemode
 				case Gamemode.NightOfTheLivingNerd: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
 				case Gamemode.Randomizer: Timing.RunCoroutine( Randomizer() ); break;
 				case Gamemode.AnnoyingMimicry: Timing.RunCoroutine( AnnoyingMimicry() ); break;
+				case Gamemode.LockedIn: Timing.RunCoroutine( LockedIn() ); break;
 				case Gamemode.Infection: Timing.RunCoroutine( Infection() ); break;
 				case Gamemode.LivingLikeLarry: Timing.RunCoroutine( LivingLikeLarry() ); break;
 			}
@@ -85,6 +86,8 @@ namespace RandomGamemode
 
 				ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.NtfCaptain ).Position;
 			}
+			yield return Timing.WaitForSeconds( 5f );
+			Map.Broadcast( 10, plugin.Config.DodgeBallText );
 		}
 
 		public IEnumerator<float> PeanutRaid()
@@ -103,6 +106,8 @@ namespace RandomGamemode
 					ply.Role.Set( RoleTypeId.Scp173 );
 				}
 			}
+			yield return Timing.WaitForSeconds( 5f );
+			Map.Broadcast( 10, plugin.Config.PeanutRaidText );
 		}
 
 		public IEnumerator<float> BlueScreenOfDeath()
@@ -122,6 +127,8 @@ namespace RandomGamemode
 				}
 			}
 			Map.ChangeLightsColor( Color.blue );
+			yield return Timing.WaitForSeconds( 5f );
+			Map.Broadcast( 10, plugin.Config.BlueScreenOfDeathText );
 		}
 
 		public IEnumerator<float> NightOfTheLivingNerd()
@@ -148,6 +155,8 @@ namespace RandomGamemode
 				}
 			}
 			Map.TurnOffAllLights( 5000 );
+			yield return Timing.WaitForSeconds( 5f );
+			Map.Broadcast( 10, plugin.Config.LivingNerdText );
 		}
 
 		public IEnumerator<float> Randomizer()
@@ -207,6 +216,8 @@ namespace RandomGamemode
 					ply.AddItem( ( ItemType ) items.GetValue( rand.Next( items.Length ) ) );
 				}
 			}
+			yield return Timing.WaitForSeconds( 5f );
+			Map.Broadcast( 10, plugin.Config.RandomizerText );
 		}
 
 		public IEnumerator<float> AnnoyingMimicry()
@@ -224,6 +235,14 @@ namespace RandomGamemode
 					ply.AddItem( ItemType.Jailbird );
                 }
 			}
+			yield return Timing.WaitForSeconds( 5f );
+			Map.Broadcast( 10, plugin.Config.AnnoyingMimicryText );
+		}
+
+		public IEnumerator<float> LockedIn()
+		{
+			yield return Timing.WaitForSeconds( 5f );
+			Map.Broadcast( 10, plugin.Config.LockedInText );
 		}
 
 		public IEnumerator<float> Infection()
@@ -234,6 +253,8 @@ namespace RandomGamemode
 				if ( ply.IsScp )
 					ply.Role.Set( RoleTypeId.Scp049 );
 			}
+			yield return Timing.WaitForSeconds( 5f );
+			Map.Broadcast( 10, plugin.Config.InfectionText );
 		}
 
 		public IEnumerator<float> LivingLikeLarry()
@@ -253,6 +274,8 @@ namespace RandomGamemode
 					ply.Position = Door.Get( DoorType.Scp173Gate ).Position + Vector3.up * 2;
 				}
 			}
+			yield return Timing.WaitForSeconds( 5f );
+			Map.Broadcast( 10, plugin.Config.LivingLikeLarryText );
 		}
 		#endregion
 
