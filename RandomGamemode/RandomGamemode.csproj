@@ -45,13 +45,13 @@
       <HintPath>\\server-pc\Servers\lambda_scp\SCPSL_Data\Managed\CommandSystem.Core.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.API">
-      <HintPath>\\server-pc\SCPSL\PluginAPI\plugins\global\dependencies\Exiled.API.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>\\server-pc\SCPSL\LabAPI\dependencies\global\Exiled.API.dll</HintPath>
     </Reference>
     <Reference Include="Exiled.Events">
       <HintPath>\\server-pc\EXILED\Plugins\Exiled.Events.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="netstandard" />
     <Reference Include="System" />
     <Reference Include="UnityEngine">
       <HintPath>\\server-pc\Servers\lambda_scp\SCPSL_Data\Managed\UnityEngine.dll</HintPath>
