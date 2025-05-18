@@ -51,7 +51,6 @@
       <HintPath>\\server-pc\EXILED\Plugins\Exiled.Events.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="netstandard" />
     <Reference Include="System" />
     <Reference Include="UnityEngine">
       <HintPath>\\server-pc\Servers\lambda_scp\SCPSL_Data\Managed\UnityEngine.dll</HintPath>
