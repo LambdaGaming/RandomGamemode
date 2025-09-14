@@ -87,7 +87,7 @@ namespace RandomGamemode
 				ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.NtfCaptain ).Position;
 			}
 			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 10, plugin.Config.DodgeBallText );
+			Map.Broadcast( 15, plugin.Config.DodgeBallText );
 			Respawn.PauseWaves();
 		}
 
@@ -108,7 +108,7 @@ namespace RandomGamemode
 				}
 			}
 			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 10, plugin.Config.PeanutRaidText );
+			Map.Broadcast( 15, plugin.Config.PeanutRaidText );
 			Respawn.PauseWaves();
 		}
 
@@ -130,7 +130,7 @@ namespace RandomGamemode
 			}
 			Map.ChangeLightsColor( Color.blue );
 			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 10, plugin.Config.BlueScreenOfDeathText );
+			Map.Broadcast( 15, plugin.Config.BlueScreenOfDeathText );
 			Respawn.PauseWaves();
 		}
 
@@ -159,7 +159,7 @@ namespace RandomGamemode
 			}
 			Map.TurnOffAllLights( 5000 );
 			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 10, plugin.Config.LivingNerdText );
+			Map.Broadcast( 15, plugin.Config.LivingNerdText );
 			Respawn.PauseWaves();
 		}
 
@@ -221,7 +221,7 @@ namespace RandomGamemode
 				}
 			}
 			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 10, plugin.Config.RandomizerText );
+			Map.Broadcast( 15, plugin.Config.RandomizerText );
 		}
 
 		public IEnumerator<float> AnnoyingMimicry()
@@ -240,14 +240,14 @@ namespace RandomGamemode
                 }
 			}
 			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 10, plugin.Config.AnnoyingMimicryText );
+			Map.Broadcast( 15, plugin.Config.AnnoyingMimicryText );
 			Respawn.PauseWaves();
 		}
 
 		public IEnumerator<float> LockedIn()
 		{
 			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 10, plugin.Config.LockedInText );
+			Map.Broadcast( 15, plugin.Config.LockedInText );
 		}
 
 		public IEnumerator<float> Infection()
@@ -259,7 +259,7 @@ namespace RandomGamemode
 					ply.Role.Set( RoleTypeId.Scp049 );
 			}
 			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 10, plugin.Config.InfectionText );
+			Map.Broadcast( 15, plugin.Config.InfectionText );
 		}
 
 		public IEnumerator<float> LivingLikeLarry()
@@ -280,7 +280,7 @@ namespace RandomGamemode
 				}
 			}
 			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 10, plugin.Config.LivingLikeLarryText );
+			Map.Broadcast( 15, plugin.Config.LivingLikeLarryText );
 			Respawn.PauseWaves();
 		}
 		#endregion
