@@ -88,6 +88,7 @@ namespace RandomGamemode
 			}
 			yield return Timing.WaitForSeconds( 5f );
 			Map.Broadcast( 10, plugin.Config.DodgeBallText );
+			Respawn.PauseWaves();
 		}
 
 		public IEnumerator<float> PeanutRaid()
@@ -108,6 +109,7 @@ namespace RandomGamemode
 			}
 			yield return Timing.WaitForSeconds( 5f );
 			Map.Broadcast( 10, plugin.Config.PeanutRaidText );
+			Respawn.PauseWaves();
 		}
 
 		public IEnumerator<float> BlueScreenOfDeath()
@@ -129,6 +131,7 @@ namespace RandomGamemode
 			Map.ChangeLightsColor( Color.blue );
 			yield return Timing.WaitForSeconds( 5f );
 			Map.Broadcast( 10, plugin.Config.BlueScreenOfDeathText );
+			Respawn.PauseWaves();
 		}
 
 		public IEnumerator<float> NightOfTheLivingNerd()
@@ -157,6 +160,7 @@ namespace RandomGamemode
 			Map.TurnOffAllLights( 5000 );
 			yield return Timing.WaitForSeconds( 5f );
 			Map.Broadcast( 10, plugin.Config.LivingNerdText );
+			Respawn.PauseWaves();
 		}
 
 		public IEnumerator<float> Randomizer()
@@ -237,6 +241,7 @@ namespace RandomGamemode
 			}
 			yield return Timing.WaitForSeconds( 5f );
 			Map.Broadcast( 10, plugin.Config.AnnoyingMimicryText );
+			Respawn.PauseWaves();
 		}
 
 		public IEnumerator<float> LockedIn()
@@ -276,6 +281,7 @@ namespace RandomGamemode
 			}
 			yield return Timing.WaitForSeconds( 5f );
 			Map.Broadcast( 10, plugin.Config.LivingLikeLarryText );
+			Respawn.PauseWaves();
 		}
 		#endregion
 
@@ -357,12 +363,8 @@ namespace RandomGamemode
 
 		public void OnRespawn( RespawningTeamEventArgs ev )
 		{
-			// Disable respawning for Annoying Mimicry gamemode and change spawn location for Locked in gamemode
-			if ( CurrentGamemode == Gamemode.AnnoyingMimicry )
-			{
-				ev.IsAllowed = false;
-			}
-			else if ( CurrentGamemode == Gamemode.LockedIn )
+			// Change spawn location for Locked in gamemode
+			if ( CurrentGamemode == Gamemode.LockedIn )
 			{
 				if ( ev.Wave.Team == Team.FoundationForces )
 				{
