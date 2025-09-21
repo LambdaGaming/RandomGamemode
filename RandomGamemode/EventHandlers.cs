@@ -33,7 +33,7 @@ namespace RandomGamemode
 	{
 		private Plugin plugin;
 		private Gamemode CurrentGamemode;
-		private bool FriendlyFireDefault;
+		private bool resetFriendlyFire;
 		System.Random rand = new System.Random();
 
 		public EventHandlers( Plugin plugin ) => this.plugin = plugin;
@@ -65,8 +65,8 @@ namespace RandomGamemode
 		#region Gamemodes
 		public IEnumerator<float> DodgeBall()
 		{
-			FriendlyFireDefault = ServerConsole.FriendlyFire;
-			ServerConsole.FriendlyFire = true;
+			resetFriendlyFire = Server.FriendlyFire;
+			Server.FriendlyFire = true;
 			yield return Timing.WaitForSeconds( 3f );
 
 			foreach ( Player ply in Player.List )
@@ -166,8 +166,8 @@ namespace RandomGamemode
 		public IEnumerator<float> Randomizer()
 		{
 			List<Player> PlyList = new List<Player>();
-			FriendlyFireDefault = ServerConsole.FriendlyFire;
-			ServerConsole.FriendlyFire = true;
+			resetFriendlyFire = Server.FriendlyFire;
+			Server.FriendlyFire = true;
 			yield return Timing.WaitForSeconds( 3f );
 
 			RoleTypeId[] roles = new RoleTypeId[] {
@@ -303,7 +303,16 @@ namespace RandomGamemode
 				Timing.RunCoroutine( DelayedRoundEnd( 900 ), "DelayedRoundEnd" );
 			}
 		}
-		
+
+		public void OnWaitingForPlayers()
+		{
+			if ( resetFriendlyFire )
+			{
+				Server.FriendlyFire = false;
+				resetFriendlyFire = false;
+			}
+		}
+
 		public void OnRoundEnding( EndingRoundEventArgs ev )
 		{
 			// Prevents randomizer round from ending if everyone is on the same team
@@ -327,7 +336,6 @@ namespace RandomGamemode
 			{
 				Map.Broadcast( 6, string.Format( plugin.Config.EndText, Plugin.GetGamemodeName( CurrentGamemode ) ) );
 				CurrentGamemode = 0;
-				ServerConsole.FriendlyFire = FriendlyFireDefault;
 				Timing.KillCoroutines( "DelayedRoundEnd" );
 			}
 		}
