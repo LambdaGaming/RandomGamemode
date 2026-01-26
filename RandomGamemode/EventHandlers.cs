@@ -85,6 +85,7 @@ namespace RandomGamemode
 				}
 
 				ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.NtfCaptain ).Position;
+				ply.RemoteAdminPermissions |= PlayerPermissions.FriendlyFireDetectorImmunity;
 			}
 			yield return Timing.WaitForSeconds( 5f );
 			Map.Broadcast( 15, plugin.Config.DodgeBallText );
@@ -196,6 +197,7 @@ namespace RandomGamemode
 			foreach ( Player ply in PlyList )
 			{
 				ply.Role.Set( roles.RandomItem() );
+				ply.RemoteAdminPermissions |= PlayerPermissions.FriendlyFireDetectorImmunity;
 			}
 
 			yield return Timing.WaitForSeconds( 1f );
@@ -315,16 +317,17 @@ namespace RandomGamemode
 
 		public void OnRoundEnding( EndingRoundEventArgs ev )
 		{
-			// Prevents randomizer round from ending if everyone is on the same team
 			int totalalive = 0;
 			foreach ( Player ply in Player.List )
 			{
 				if ( ply.IsAlive )
 					totalalive++;
+				ply.RemoteAdminPermissions &= ~PlayerPermissions.FriendlyFireDetectorImmunity;
 			}
 
 			if ( CurrentGamemode == Gamemode.Randomizer && totalalive > 1 )
 			{
+				// Prevents randomizer round from ending if everyone is on the same team
 				ev.IsAllowed = false;
 			}
 		}
