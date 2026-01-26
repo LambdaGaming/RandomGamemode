@@ -337,6 +337,7 @@ namespace RandomGamemode
 				Map.Broadcast( 6, string.Format( plugin.Config.EndText, Plugin.GetGamemodeName( CurrentGamemode ) ) );
 				CurrentGamemode = 0;
 				Timing.KillCoroutines( "DelayedRoundEnd" );
+				Respawn.ResumeWaves();
 			}
 		}
 
