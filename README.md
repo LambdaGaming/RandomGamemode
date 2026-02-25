@@ -57,6 +57,3 @@
 - Accepts a number as an optional argument to set a specific gamemode (Number must correspond to a valid gamemode in the order listed here, starting from 1)
 - A random gamemode will be chosen if no argument is provided
 - Set the number argument to 0 to unset a forced gamemode round
-
-# Issues & Pull Requests
- If you would like to contribute to this repository by creating an issue or pull request, please refer to the [contributing guidelines.](https://lambdagaming.github.io/contributing.html)
