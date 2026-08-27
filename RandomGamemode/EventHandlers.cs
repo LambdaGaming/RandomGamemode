@@ -129,7 +129,7 @@ namespace RandomGamemode
 					ply.ClearInventory();
 				}
 			}
-			Map.ChangeLightsColor( Color.blue );
+			Map.ChangeLightsColor( new Color( 0, 90, 255 ) );
 			yield return Timing.WaitForSeconds( 5f );
 			Map.Broadcast( 15, plugin.Config.BlueScreenOfDeathText );
 			Respawn.PauseWaves();
