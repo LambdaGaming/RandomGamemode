@@ -121,7 +121,6 @@ namespace RandomGamemode
 				if ( ply.IsScp )
 				{
 					ply.Role.Set( RoleTypeId.Scp079 );
-					( ply.Role as Scp079Role ).Level = 3;
 				}
 				else
 				{
@@ -133,6 +132,11 @@ namespace RandomGamemode
 			yield return Timing.WaitForSeconds( 5f );
 			Map.Broadcast( 15, plugin.Config.BlueScreenOfDeathText );
 			Respawn.PauseWaves();
+			foreach ( Player ply in Player.List )
+			{
+				if ( ply.Role.Type == RoleTypeId.Scp079 )
+					( ply.Role as Scp079Role ).Level = 3;
+			}
 		}
 
 		public IEnumerator<float> NightOfTheLivingNerd()
