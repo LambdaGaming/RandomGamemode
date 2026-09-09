@@ -1,84 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{9280B8BA-6290-4FC8-A58F-BC24E43AA486}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RandomGamemode</RootNamespace>
-    <AssemblyName>RandomGamemode</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFramework>net48</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DebugType>none</DebugType>
+  </PropertyGroup> 
+
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>\\server-pc\Servers\lambda_scp\SCPSL_Data\Managed\Assembly-CSharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>\\server-pc\Servers\lambda_scp\SCPSL_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="CommandSystem.Core">
-      <HintPath>\\server-pc\Servers\lambda_scp\SCPSL_Data\Managed\CommandSystem.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.API">
-      <HintPath>\\server-pc\SCPSL\LabAPI\dependencies\global\Exiled.API.dll</HintPath>
-    </Reference>
-    <Reference Include="Exiled.Events">
-      <HintPath>\\server-pc\EXILED\Plugins\Exiled.Events.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="UnityEngine">
-      <HintPath>\\server-pc\Servers\lambda_scp\SCPSL_Data\Managed\UnityEngine.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>\\server-pc\Servers\lambda_scp\SCPSL_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>\\server-pc\Servers\lambda_scp\SCPSL_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
+    <PackageReference Include="ExMod.Exiled" Version="9.14.2" />
+    <Reference Include="Assembly-CSharp-firstpass" HintPath="/mnt/Disk3/SteamLibrary/steamapps/common/SCP Secret Laboratory Dedicated Server/SCPSL_Data/Managed/Assembly-CSharp-firstpass.dll" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="/mnt/Disk3/SteamLibrary/steamapps/common/SCP Secret Laboratory Dedicated Server/SCPSL_Data/Managed/UnityEngine.CoreModule.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Commands\ForceGamemode.cs" />
-    <Compile Include="Config.cs" />
-    <Compile Include="EventHandlers.cs" />
-    <Compile Include="Plugin.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-         Other similar extension points exist, see Microsoft.Common.targets.
-    <Target Name="BeforeBuild">
-    </Target>
-    <Target Name="AfterBuild">
-    </Target>
-    -->
+
 </Project>

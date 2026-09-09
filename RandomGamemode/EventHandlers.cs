@@ -9,438 +9,435 @@ using Exiled.Events.EventArgs.Player;
 using Exiled.Events.EventArgs.Server;
 using MEC;
 using PlayerRoles;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace RandomGamemode
+namespace RandomGamemode;
+
+enum Gamemode
 {
-	enum Gamemode
+	Invalid,
+	Dodgeball,
+	PeanutRaid,
+	BlueScreenOfDeath,
+	NightOfTheLivingNerd,
+	Randomizer,
+	AnnoyingMimicry,
+	LockedIn,
+	Infection,
+	LivingLikeLarry
+}
+
+public class EventHandlers
+{
+	private Plugin plugin;
+	private Gamemode CurrentGamemode;
+	private bool resetFriendlyFire;
+	System.Random rand = new System.Random();
+
+	public EventHandlers( Plugin plugin ) => this.plugin = plugin;
+
+	private void StartGamemode( Gamemode gm )
 	{
-		Invalid,
-		Dodgeball,
-		PeanutRaid,
-		BlueScreenOfDeath,
-		NightOfTheLivingNerd,
-		Randomizer,
-		AnnoyingMimicry,
-		LockedIn,
-		Infection,
-		LivingLikeLarry
+		CurrentGamemode = gm;
+		switch ( gm )
+		{
+			case Gamemode.Dodgeball: Timing.RunCoroutine( DodgeBall() ); break;
+			case Gamemode.PeanutRaid: Timing.RunCoroutine( PeanutRaid() ); break;
+			case Gamemode.BlueScreenOfDeath: Timing.RunCoroutine( BlueScreenOfDeath() ); break;
+			case Gamemode.NightOfTheLivingNerd: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
+			case Gamemode.Randomizer: Timing.RunCoroutine( Randomizer() ); break;
+			case Gamemode.AnnoyingMimicry: Timing.RunCoroutine( AnnoyingMimicry() ); break;
+			case Gamemode.LockedIn: Timing.RunCoroutine( LockedIn() ); break;
+			case Gamemode.Infection: Timing.RunCoroutine( Infection() ); break;
+			case Gamemode.LivingLikeLarry: Timing.RunCoroutine( LivingLikeLarry() ); break;
+		}
+		Map.Broadcast( 6, string.Format( plugin.Config.StartText, Plugin.GetGamemodeName( CurrentGamemode ) ) );
 	}
 
-	public class EventHandlers
+	private IEnumerator<float> DelayedRoundEnd( float delay )
 	{
-		private Plugin plugin;
-		private Gamemode CurrentGamemode;
-		private bool resetFriendlyFire;
-		System.Random rand = new System.Random();
+		yield return Timing.WaitForSeconds( delay );
+		Round.EndRound( true );
+	}
 
-		public EventHandlers( Plugin plugin ) => this.plugin = plugin;
+	#region Gamemodes
+	public IEnumerator<float> DodgeBall()
+	{
+		resetFriendlyFire = Server.FriendlyFire;
+		Server.FriendlyFire = true;
+		yield return Timing.WaitForSeconds( 3f );
 
-		private void StartGamemode( Gamemode gm )
+		foreach ( Player ply in Player.List )
 		{
-			CurrentGamemode = gm;
-			switch ( gm )
+			if ( ply.IsScp )
 			{
-				case Gamemode.Dodgeball: Timing.RunCoroutine( DodgeBall() ); break;
-				case Gamemode.PeanutRaid: Timing.RunCoroutine( PeanutRaid() ); break;
-				case Gamemode.BlueScreenOfDeath: Timing.RunCoroutine( BlueScreenOfDeath() ); break;
-				case Gamemode.NightOfTheLivingNerd: Timing.RunCoroutine( NightOfTheLivingNerd() ); break;
-				case Gamemode.Randomizer: Timing.RunCoroutine( Randomizer() ); break;
-				case Gamemode.AnnoyingMimicry: Timing.RunCoroutine( AnnoyingMimicry() ); break;
-				case Gamemode.LockedIn: Timing.RunCoroutine( LockedIn() ); break;
-				case Gamemode.Infection: Timing.RunCoroutine( Infection() ); break;
-				case Gamemode.LivingLikeLarry: Timing.RunCoroutine( LivingLikeLarry() ); break;
+				ply.Role.Set( RoleTypeId.FacilityGuard );
 			}
-			Map.Broadcast( 6, string.Format( plugin.Config.StartText, Plugin.GetGamemodeName( CurrentGamemode ) ) );
-		}
 
-		private IEnumerator<float> DelayedRoundEnd( float delay )
-		{
-			yield return Timing.WaitForSeconds( delay );
-			Round.EndRound( true );
-		}
+			yield return Timing.WaitForSeconds( 0.5f );
+			ply.ClearInventory();
 
-		#region Gamemodes
-		public IEnumerator<float> DodgeBall()
-		{
-			resetFriendlyFire = Server.FriendlyFire;
-			Server.FriendlyFire = true;
-			yield return Timing.WaitForSeconds( 3f );
-
-			foreach ( Player ply in Player.List )
+			for ( int i = 0; i < 7; i++ )
 			{
-				if ( ply.IsScp )
-				{
-					ply.Role.Set( RoleTypeId.FacilityGuard );
-				}
+				ply.AddItem( ItemType.SCP018 );
+			}
 
+			ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.NtfCaptain ).Position;
+			ply.RemoteAdminPermissions |= PlayerPermissions.FriendlyFireDetectorImmunity;
+		}
+		yield return Timing.WaitForSeconds( 5f );
+		Map.Broadcast( 15, plugin.Config.DodgeBallText );
+		Respawn.PauseWaves();
+	}
+
+	public IEnumerator<float> PeanutRaid()
+	{
+		yield return Timing.WaitForSeconds( 3f );
+		foreach ( Player ply in Player.List )
+		{
+			if ( ply.IsScp )
+			{
+				ply.Role.Set( RoleTypeId.ClassD );
 				yield return Timing.WaitForSeconds( 0.5f );
+				ply.Scale *= 0.25f;
+			}
+			else
+			{
+				ply.Role.Set( RoleTypeId.Scp173 );
+			}
+		}
+		yield return Timing.WaitForSeconds( 5f );
+		Map.Broadcast( 15, plugin.Config.PeanutRaidText );
+		Respawn.PauseWaves();
+	}
+
+	public IEnumerator<float> BlueScreenOfDeath()
+	{
+		yield return Timing.WaitForSeconds( 3f );
+		foreach ( Player ply in Player.List )
+		{
+			if ( ply.IsScp )
+			{
+				ply.Role.Set( RoleTypeId.Scp079 );
+			}
+			else
+			{
+				ply.Role.Set( RoleTypeId.Scientist );
 				ply.ClearInventory();
-
-				for ( int i = 0; i < 7; i++ )
-				{
-					ply.AddItem( ItemType.SCP018 );
-				}
-
-				ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.NtfCaptain ).Position;
-				ply.RemoteAdminPermissions |= PlayerPermissions.FriendlyFireDetectorImmunity;
-			}
-			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 15, plugin.Config.DodgeBallText );
-			Respawn.PauseWaves();
-		}
-
-		public IEnumerator<float> PeanutRaid()
-		{
-			yield return Timing.WaitForSeconds( 3f );
-			foreach ( Player ply in Player.List )
-			{
-				if ( ply.IsScp )
-				{
-					ply.Role.Set( RoleTypeId.ClassD );
-					yield return Timing.WaitForSeconds( 0.5f );
-					ply.Scale *= 0.25f;
-				}
-				else
-				{
-					ply.Role.Set( RoleTypeId.Scp173 );
-				}
-			}
-			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 15, plugin.Config.PeanutRaidText );
-			Respawn.PauseWaves();
-		}
-
-		public IEnumerator<float> BlueScreenOfDeath()
-		{
-			yield return Timing.WaitForSeconds( 3f );
-			foreach ( Player ply in Player.List )
-			{
-				if ( ply.IsScp )
-				{
-					ply.Role.Set( RoleTypeId.Scp079 );
-				}
-				else
-				{
-					ply.Role.Set( RoleTypeId.Scientist );
-					ply.ClearInventory();
-				}
-			}
-			Map.ChangeLightsColor( new Color( 0, 90, 255 ) );
-			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 15, plugin.Config.BlueScreenOfDeathText );
-			Respawn.PauseWaves();
-			foreach ( Player ply in Player.List )
-			{
-				if ( ply.Role.Type == RoleTypeId.Scp079 )
-					( ply.Role as Scp079Role ).Level = 3;
 			}
 		}
-
-		public IEnumerator<float> NightOfTheLivingNerd()
+		Map.ChangeLightsColor( new Color( 0, 90, 255 ) );
+		yield return Timing.WaitForSeconds( 5f );
+		Map.Broadcast( 15, plugin.Config.BlueScreenOfDeathText );
+		Respawn.PauseWaves();
+		foreach ( Player ply in Player.List )
 		{
-			yield return Timing.WaitForSeconds( 3f );
-			foreach ( Player ply in Player.List )
-			{
-				if ( ply.IsScp )
-				{
-					ply.Role.Set( RoleTypeId.Scientist );
-					ply.ClearInventory();
-					ply.AddItem( ItemType.GunLogicer );
-					ply.AddItem( ItemType.Flashlight );
-					ply.AddItem( ItemType.KeycardFacilityManager );
-					ply.SetAmmo( AmmoType.Nato762, 1000 );
-					ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.Scp939 ).Position;
-					ply.EnableEffect( EffectType.MovementBoost );
-				}
-				else
-				{
-					ply.Role.Set( RoleTypeId.ClassD );
-					ply.AddItem( ItemType.Flashlight );
-					ply.AddItem( ItemType.SCP268 );
-				}
-			}
-			Map.TurnOffAllLights( 5000 );
-			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 15, plugin.Config.LivingNerdText );
-			Respawn.PauseWaves();
+			if ( ply.Role.Type == RoleTypeId.Scp079 )
+				( ply.Role as Scp079Role ).Level = 3;
 		}
+	}
 
-		public IEnumerator<float> Randomizer()
+	public IEnumerator<float> NightOfTheLivingNerd()
+	{
+		yield return Timing.WaitForSeconds( 3f );
+		foreach ( Player ply in Player.List )
 		{
-			List<Player> PlyList = new List<Player>();
-			resetFriendlyFire = Server.FriendlyFire;
-			Server.FriendlyFire = true;
-			yield return Timing.WaitForSeconds( 3f );
-
-			RoleTypeId[] roles = new RoleTypeId[] {
-				RoleTypeId.NtfCaptain, RoleTypeId.ChaosConscript, RoleTypeId.ClassD,
-				RoleTypeId.FacilityGuard, RoleTypeId.Scientist
-			};
-
-			RoleTypeId[] scps = new RoleTypeId[] {
-				RoleTypeId.Scp049, RoleTypeId.Scp0492, RoleTypeId.Scp096,
-				RoleTypeId.Scp106, RoleTypeId.Scp173, RoleTypeId.Scp939
-			};
-
-			// Set random SCP
-			foreach ( Player ply in Player.List )
+			if ( ply.IsScp )
 			{
-				PlyList.Add( ply );
-			}
-
-			yield return Timing.WaitForSeconds( 1f );
-
-			Player scp = PlyList.RandomItem();
-			scp.Role.Set( scps.RandomItem() );
-			PlyList.RemoveAt( PlyList.IndexOf( scp ) );
-
-			// Set random roles for the rest of the players
-			foreach ( Player ply in PlyList )
-			{
-				ply.Role.Set( roles.RandomItem() );
-				ply.RemoteAdminPermissions |= PlayerPermissions.FriendlyFireDetectorImmunity;
-			}
-
-			yield return Timing.WaitForSeconds( 1f );
-
-			// Set random spawns
-			foreach ( Player ply in Player.List )
-			{
-				if ( ply.Role == RoleTypeId.Scp0492 )
-					ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.ClassD ).Position;
-				else
-					ply.Position = RoleExtensions.GetRandomSpawnLocation( roles.RandomItem() ).Position;
-			}
-
-			// Set random inventory items
-			Array items = Enum.GetValues( typeof( ItemType ) );
-			foreach ( Player ply in Player.List )
-			{
+				ply.Role.Set( RoleTypeId.Scientist );
 				ply.ClearInventory();
-				ply.AddItem( ItemType.KeycardO5 );
-				for ( int i = 0; i < 7; i++ )
-				{
-					ply.AddItem( ( ItemType ) items.GetValue( rand.Next( items.Length ) ) );
-				}
+				ply.AddItem( ItemType.GunLogicer );
+				ply.AddItem( ItemType.Flashlight );
+				ply.AddItem( ItemType.KeycardFacilityManager );
+				ply.SetAmmo( AmmoType.Nato762, 1000 );
+				ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.Scp939 ).Position;
+				ply.EnableEffect( EffectType.MovementBoost );
 			}
-			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 15, plugin.Config.RandomizerText );
+			else
+			{
+				ply.Role.Set( RoleTypeId.ClassD );
+				ply.AddItem( ItemType.Flashlight );
+				ply.AddItem( ItemType.SCP268 );
+			}
+		}
+		Map.TurnOffAllLights( 5000 );
+		yield return Timing.WaitForSeconds( 5f );
+		Map.Broadcast( 15, plugin.Config.LivingNerdText );
+		Respawn.PauseWaves();
+	}
+
+	public IEnumerator<float> Randomizer()
+	{
+		List<Player> PlyList = new List<Player>();
+		resetFriendlyFire = Server.FriendlyFire;
+		Server.FriendlyFire = true;
+		yield return Timing.WaitForSeconds( 3f );
+
+		RoleTypeId[] roles = new RoleTypeId[] {
+			RoleTypeId.NtfCaptain, RoleTypeId.ChaosConscript, RoleTypeId.ClassD,
+			RoleTypeId.FacilityGuard, RoleTypeId.Scientist
+		};
+
+		RoleTypeId[] scps = new RoleTypeId[] {
+			RoleTypeId.Scp049, RoleTypeId.Scp0492, RoleTypeId.Scp096,
+			RoleTypeId.Scp106, RoleTypeId.Scp173, RoleTypeId.Scp939
+		};
+
+		// Set random SCP
+		foreach ( Player ply in Player.List )
+		{
+			PlyList.Add( ply );
 		}
 
-		public IEnumerator<float> AnnoyingMimicry()
+		yield return Timing.WaitForSeconds( 1f );
+
+		Player scp = PlyList.RandomItem();
+		scp.Role.Set( scps.RandomItem() );
+		PlyList.RemoveAt( PlyList.IndexOf( scp ) );
+
+		// Set random roles for the rest of the players
+		foreach ( Player ply in PlyList )
 		{
-			yield return Timing.WaitForSeconds( 3f );
-			foreach ( Player ply in Player.List )
+			ply.Role.Set( roles.RandomItem() );
+			ply.RemoteAdminPermissions |= PlayerPermissions.FriendlyFireDetectorImmunity;
+		}
+
+		yield return Timing.WaitForSeconds( 1f );
+
+		// Set random spawns
+		foreach ( Player ply in Player.List )
+		{
+			if ( ply.Role == RoleTypeId.Scp0492 )
+				ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.ClassD ).Position;
+			else
+				ply.Position = RoleExtensions.GetRandomSpawnLocation( roles.RandomItem() ).Position;
+		}
+
+		// Set random inventory items
+		Array items = Enum.GetValues( typeof( ItemType ) );
+		foreach ( Player ply in Player.List )
+		{
+			ply.ClearInventory();
+			ply.AddItem( ItemType.KeycardO5 );
+			for ( int i = 0; i < 7; i++ )
 			{
-				if ( ply.IsScp )
-				{
+				ply.AddItem( ( ItemType ) items.GetValue( rand.Next( items.Length ) ) );
+			}
+		}
+		yield return Timing.WaitForSeconds( 5f );
+		Map.Broadcast( 15, plugin.Config.RandomizerText );
+	}
+
+	public IEnumerator<float> AnnoyingMimicry()
+	{
+		yield return Timing.WaitForSeconds( 3f );
+		foreach ( Player ply in Player.List )
+		{
+			if ( ply.IsScp )
+			{
                     ply.Role.Set( RoleTypeId.Scp939 );
                 }
-				else
-				{
+			else
+			{
                     ply.Role.Set( RoleTypeId.ClassD );
-					ply.AddItem( ItemType.Jailbird );
+				ply.AddItem( ItemType.Jailbird );
                 }
-			}
-			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 15, plugin.Config.AnnoyingMimicryText );
-			Respawn.PauseWaves();
 		}
+		yield return Timing.WaitForSeconds( 5f );
+		Map.Broadcast( 15, plugin.Config.AnnoyingMimicryText );
+		Respawn.PauseWaves();
+	}
 
-		public IEnumerator<float> LockedIn()
+	public IEnumerator<float> LockedIn()
+	{
+		yield return Timing.WaitForSeconds( 5f );
+		Map.Broadcast( 15, plugin.Config.LockedInText );
+	}
+
+	public IEnumerator<float> Infection()
+	{
+		yield return Timing.WaitForSeconds( 3f );
+		foreach ( Player ply in Player.List )
 		{
-			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 15, plugin.Config.LockedInText );
+			if ( ply.IsScp )
+				ply.Role.Set( RoleTypeId.Scp049 );
 		}
+		yield return Timing.WaitForSeconds( 5f );
+		Map.Broadcast( 15, plugin.Config.InfectionText );
+	}
 
-		public IEnumerator<float> Infection()
+	public IEnumerator<float> LivingLikeLarry()
+	{
+		yield return Timing.WaitForSeconds( 3f );
+		foreach ( Player ply in Player.List )
 		{
-			yield return Timing.WaitForSeconds( 3f );
-			foreach ( Player ply in Player.List )
+			if ( ply.IsScp )
 			{
-				if ( ply.IsScp )
-					ply.Role.Set( RoleTypeId.Scp049 );
+				ply.Role.Set( RoleTypeId.ClassD );
+				ply.Position = Door.Get( DoorType.Scp173Bottom ).Position + Vector3.up * 2;
+				ply.AddItem( ItemType.KeycardO5 );
 			}
-			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 15, plugin.Config.InfectionText );
-		}
-
-		public IEnumerator<float> LivingLikeLarry()
-		{
-			yield return Timing.WaitForSeconds( 3f );
-			foreach ( Player ply in Player.List )
+			else
 			{
-				if ( ply.IsScp )
-				{
-					ply.Role.Set( RoleTypeId.ClassD );
-					ply.Position = Door.Get( DoorType.Scp173Bottom ).Position + Vector3.up * 2;
-					ply.AddItem( ItemType.KeycardO5 );
-				}
-				else
-				{
-					ply.Role.Set( RoleTypeId.Scp106 );
-					ply.Position = Door.Get( DoorType.Scp173Gate ).Position + Vector3.up * 2;
-				}
-			}
-			yield return Timing.WaitForSeconds( 5f );
-			Map.Broadcast( 15, plugin.Config.LivingLikeLarryText );
-			Respawn.PauseWaves();
-		}
-		#endregion
-
-		#region Events
-		public void OnRoundStart()
-		{
-			if ( Plugin.NextGamemode != Gamemode.Invalid )
-			{
-				StartGamemode( Plugin.NextGamemode );
-				Plugin.NextGamemode = Gamemode.Invalid;
-			}
-			else if ( rand.Next( 1, 101 ) <= plugin.Config.GamemodeChance )
-			{
-				CurrentGamemode = Plugin.EnabledList.RandomItem();
-				StartGamemode( CurrentGamemode );
-			}
-			if ( CurrentGamemode == Gamemode.BlueScreenOfDeath )
-			{
-				Timing.RunCoroutine( DelayedRoundEnd( 900 ), "DelayedRoundEnd" );
+				ply.Role.Set( RoleTypeId.Scp106 );
+				ply.Position = Door.Get( DoorType.Scp173Gate ).Position + Vector3.up * 2;
 			}
 		}
+		yield return Timing.WaitForSeconds( 5f );
+		Map.Broadcast( 15, plugin.Config.LivingLikeLarryText );
+		Respawn.PauseWaves();
+	}
+	#endregion
 
-		public void OnWaitingForPlayers()
+	#region Events
+	public void OnRoundStart()
+	{
+		if ( Plugin.NextGamemode != Gamemode.Invalid )
 		{
-			if ( resetFriendlyFire )
-			{
-				Server.FriendlyFire = false;
-				resetFriendlyFire = false;
-			}
+			StartGamemode( Plugin.NextGamemode );
+			Plugin.NextGamemode = Gamemode.Invalid;
+		}
+		else if ( rand.Next( 1, 101 ) <= plugin.Config.GamemodeChance )
+		{
+			CurrentGamemode = Plugin.EnabledList.RandomItem();
+			StartGamemode( CurrentGamemode );
+		}
+		if ( CurrentGamemode == Gamemode.BlueScreenOfDeath )
+		{
+			Timing.RunCoroutine( DelayedRoundEnd( 900 ), "DelayedRoundEnd" );
+		}
+	}
+
+	public void OnWaitingForPlayers()
+	{
+		if ( resetFriendlyFire )
+		{
+			Server.FriendlyFire = false;
+			resetFriendlyFire = false;
+		}
+	}
+
+	public void OnRoundEnding( EndingRoundEventArgs ev )
+	{
+		int totalalive = 0;
+		foreach ( Player ply in Player.List )
+		{
+			if ( ply.IsAlive )
+				totalalive++;
+			ply.RemoteAdminPermissions &= ~PlayerPermissions.FriendlyFireDetectorImmunity;
 		}
 
-		public void OnRoundEnding( EndingRoundEventArgs ev )
+		if ( CurrentGamemode == Gamemode.Randomizer && totalalive > 1 )
 		{
-			int totalalive = 0;
-			foreach ( Player ply in Player.List )
-			{
-				if ( ply.IsAlive )
-					totalalive++;
-				ply.RemoteAdminPermissions &= ~PlayerPermissions.FriendlyFireDetectorImmunity;
-			}
-
-			if ( CurrentGamemode == Gamemode.Randomizer && totalalive > 1 )
-			{
-				// Prevents randomizer round from ending if everyone is on the same team
-				ev.IsAllowed = false;
-			}
+			// Prevents randomizer round from ending if everyone is on the same team
+			ev.IsAllowed = false;
 		}
+	}
 
-		public void OnRoundEnd( RoundEndedEventArgs ev )
+	public void OnRoundEnd( RoundEndedEventArgs ev )
+	{
+		// Broadcast that the gamemode has ended
+		if ( CurrentGamemode > 0 )
 		{
-			// Broadcast that the gamemode has ended
-			if ( CurrentGamemode > 0 )
-			{
-				Map.Broadcast( 6, string.Format( plugin.Config.EndText, Plugin.GetGamemodeName( CurrentGamemode ) ) );
-				CurrentGamemode = 0;
-				Timing.KillCoroutines( "DelayedRoundEnd" );
-				Respawn.ResumeWaves();
-			}
+			Map.Broadcast( 6, string.Format( plugin.Config.EndText, Plugin.GetGamemodeName( CurrentGamemode ) ) );
+			CurrentGamemode = 0;
+			Timing.KillCoroutines( "DelayedRoundEnd" );
+			Respawn.ResumeWaves();
 		}
+	}
 
-		public void OnGrenadeThrown( ThrownProjectileEventArgs ev )
+	public void OnGrenadeThrown( ThrownProjectileEventArgs ev )
+	{
+		// Increase size and decrease fuse time of dodgeballs
+		if ( CurrentGamemode == Gamemode.Dodgeball && ev.Projectile.ProjectileType == ProjectileType.Scp018 )
 		{
-			// Increase size and decrease fuse time of dodgeballs
-			if ( CurrentGamemode == Gamemode.Dodgeball && ev.Projectile.ProjectileType == ProjectileType.Scp018 )
-			{
-				ev.Projectile.Scale *= 3;
-				( ev.Projectile as Scp018Projectile ).FuseTime = 1;
-				ev.Player.AddItem( ItemType.SCP018 );
-			}
+			ev.Projectile.Scale *= 3;
+			( ev.Projectile as Scp018Projectile ).FuseTime = 1;
+			ev.Player.AddItem( ItemType.SCP018 );
 		}
+	}
 
-		public void OnItemDropped( DroppingItemEventArgs ev )
+	public void OnItemDropped( DroppingItemEventArgs ev )
+	{
+		// Disable dropping dodgeballs so players don't lose all of them
+		if ( CurrentGamemode == Gamemode.Dodgeball )
 		{
-			// Disable dropping dodgeballs so players don't lose all of them
-			if ( CurrentGamemode == Gamemode.Dodgeball )
-			{
-				ev.IsAllowed = false;
-			}
+			ev.IsAllowed = false;
 		}
+	}
 
-		public void OnGeneratorDeactivate( StoppingGeneratorEventArgs ev )
+	public void OnGeneratorDeactivate( StoppingGeneratorEventArgs ev )
+	{
+		// Prevent generators from being deactivated once they're active
+		if ( CurrentGamemode == Gamemode.BlueScreenOfDeath )
 		{
-			// Prevent generators from being deactivated once they're active
-			if ( CurrentGamemode == Gamemode.BlueScreenOfDeath )
-			{
-				ev.IsAllowed = false;
-			}
+			ev.IsAllowed = false;
 		}
+	}
 
-		public void OnRespawn( RespawningTeamEventArgs ev )
+	public void OnRespawn( RespawningTeamEventArgs ev )
+	{
+		// Change spawn location for Locked in gamemode
+		if ( CurrentGamemode == Gamemode.LockedIn )
 		{
-			// Change spawn location for Locked in gamemode
-			if ( CurrentGamemode == Gamemode.LockedIn )
-			{
-				if ( ev.Wave.Team == Team.FoundationForces )
-				{
-					Timing.CallDelayed( 3, () => {
-						foreach( Player ply in ev.Players )
-						{
-							ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.FacilityGuard ).Position;
-						}
-					} );
-				}
-				else if ( ev.Wave.Team == Team.ChaosInsurgency )
-				{
-					Timing.CallDelayed( 3, () => {
-						foreach ( Player ply in ev.Players )
-						{
-							List<RoleTypeId> scps = new List<RoleTypeId>() {
-								RoleTypeId.Scp939, RoleTypeId.Scp049, RoleTypeId.Scp096,
-								RoleTypeId.Scp173, RoleTypeId.Scp106
-							};
-							ply.Position = RoleExtensions.GetRandomSpawnLocation( scps.RandomItem() ).Position;
-						}
-					} );
-				}
-			}
-		}
-
-		public void OnPlayerDied( DiedEventArgs ev )
-		{
-			// Respawn killed players as 939 for Annoying Mimicry gamemode, and 049-2 for Infection
-			if ( CurrentGamemode == Gamemode.AnnoyingMimicry )
-			{
-				Timing.CallDelayed( 3, () => ev.Player.Role.Set( RoleTypeId.Scp939 ) );
-			}
-			else if ( CurrentGamemode == Gamemode.Infection )
+			if ( ev.Wave.Team == Team.FoundationForces )
 			{
 				Timing.CallDelayed( 3, () => {
-					ev.Player.Role.Set( RoleTypeId.Scp0492 );
-					ev.Player.Scale *= 1.15f;
-					ev.Player.MaxHealth = 400;
-					ev.Player.Health = 400;
+					foreach( Player ply in ev.Players )
+					{
+						ply.Position = RoleExtensions.GetRandomSpawnLocation( RoleTypeId.FacilityGuard ).Position;
+					}
+				} );
+			}
+			else if ( ev.Wave.Team == Team.ChaosInsurgency )
+			{
+				Timing.CallDelayed( 3, () => {
+					foreach ( Player ply in ev.Players )
+					{
+						List<RoleTypeId> scps = new List<RoleTypeId>() {
+							RoleTypeId.Scp939, RoleTypeId.Scp049, RoleTypeId.Scp096,
+							RoleTypeId.Scp173, RoleTypeId.Scp106
+						};
+						ply.Position = RoleExtensions.GetRandomSpawnLocation( scps.RandomItem() ).Position;
+					}
 				} );
 			}
 		}
-
-		public void OnDoorUse( InteractingDoorEventArgs ev )
-		{
-			// Disable using gates for Annoying Mimicry and Locked In gamemodes
-			if ( ( CurrentGamemode == Gamemode.AnnoyingMimicry || CurrentGamemode == Gamemode.LockedIn ) && ( ev.Door == Door.Get( "GATE_A" ) || ev.Door == Door.Get( "GATE_B" ) ) )
-			{
-				ev.IsAllowed = false;
-			}
-		}
-
-		public void OnDecon( DecontaminatingEventArgs ev )
-		{
-			if ( CurrentGamemode == Gamemode.LockedIn )
-			{
-				ev.IsAllowed = false;
-			}
-		}
-		#endregion
 	}
+
+	public void OnPlayerDied( DiedEventArgs ev )
+	{
+		// Respawn killed players as 939 for Annoying Mimicry gamemode, and 049-2 for Infection
+		if ( CurrentGamemode == Gamemode.AnnoyingMimicry )
+		{
+			Timing.CallDelayed( 3, () => ev.Player.Role.Set( RoleTypeId.Scp939 ) );
+		}
+		else if ( CurrentGamemode == Gamemode.Infection )
+		{
+			Timing.CallDelayed( 3, () => {
+				ev.Player.Role.Set( RoleTypeId.Scp0492 );
+				ev.Player.Scale *= 1.15f;
+				ev.Player.MaxHealth = 400;
+				ev.Player.Health = 400;
+			} );
+		}
+	}
+
+	public void OnDoorUse( InteractingDoorEventArgs ev )
+	{
+		// Disable using gates for Annoying Mimicry and Locked In gamemodes
+		if ( ( CurrentGamemode == Gamemode.AnnoyingMimicry || CurrentGamemode == Gamemode.LockedIn ) && ( ev.Door == Door.Get( "GATE_A" ) || ev.Door == Door.Get( "GATE_B" ) ) )
+		{
+			ev.IsAllowed = false;
+		}
+	}
+
+	public void OnDecon( DecontaminatingEventArgs ev )
+	{
+		if ( CurrentGamemode == Gamemode.LockedIn )
+		{
+			ev.IsAllowed = false;
+		}
+	}
+	#endregion
 }

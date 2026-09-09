@@ -58,5 +58,8 @@
 - A random gamemode will be chosen if no argument is provided
 - Set the number argument to 0 to unset a forced gamemode round
 
+# Building
+ The project files are intended to be built using either the command line or VSCode with the C# Dev Tools extension, but Visual Studio should work too. You will need to have the SCP:SL dedicated server and .NET SDK 8 or above installed. You will also need to change the reference paths in the .csproj file to the location of your dedicated server.
+
 # Contributing
  Contributions are welcome! Please read through the [guidelines](https://lambdagaming.github.io/guides/contributing) before submitting an issue or pull request.
