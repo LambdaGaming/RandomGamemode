@@ -126,7 +126,7 @@ public class EventHandlers
 				ply.ClearInventory();
 			}
 		}
-		Map.ChangeLightsColor( new Color( 0, 90, 255 ) );
+		Map.ChangeLightsColor( new Color( 0, 0.35f, 1f ) );
 		yield return Timing.WaitForSeconds( 5f );
 		Map.Broadcast( 15, plugin.Config.BlueScreenOfDeathText );
 		Respawn.PauseWaves();

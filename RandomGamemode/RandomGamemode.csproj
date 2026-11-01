@@ -12,7 +12,7 @@
   </PropertyGroup> 
 
   <ItemGroup>
-    <PackageReference Include="ExMod.Exiled" Version="9.14.2" />
+    <PackageReference Include="ExMod.Exiled" Version="9.15.2" />
     <Reference Include="Assembly-CSharp-firstpass" HintPath="/mnt/Disk3/SteamLibrary/steamapps/common/SCP Secret Laboratory Dedicated Server/SCPSL_Data/Managed/Assembly-CSharp-firstpass.dll" />
     <Reference Include="UnityEngine.CoreModule" HintPath="/mnt/Disk3/SteamLibrary/steamapps/common/SCP Secret Laboratory Dedicated Server/SCPSL_Data/Managed/UnityEngine.CoreModule.dll" />
   </ItemGroup>
