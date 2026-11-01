@@ -128,8 +128,8 @@ public class EventHandlers
 		Respawn.PauseWaves();
 		foreach ( Player ply in Player.List )
 		{
-			if ( ply.Role.Type == RoleTypeId.Scp079 )
-				( ply.Role as Scp079Role ).Level = 3;
+			if ( ply.Role is Scp079Role scp079 )
+				scp079.Level = 3;
 		}
 	}
 
@@ -164,7 +164,7 @@ public class EventHandlers
 
 	public IEnumerator<float> Randomizer()
 	{
-		List<Player> PlyList = new List<Player>();
+		List<Player> PlyList = [];
 		resetFriendlyFire = Server.FriendlyFire;
 		Server.FriendlyFire = true;
 		yield return Timing.WaitForSeconds( 3f );
@@ -307,15 +307,15 @@ public class EventHandlers
 
 	public void OnRoundEnding( EndingRoundEventArgs ev )
 	{
-		int totalalive = 0;
+		int totalAlive = 0;
 		foreach ( Player ply in Player.List )
 		{
 			if ( ply.IsAlive )
-				totalalive++;
+				totalAlive++;
 			ply.RemoteAdminPermissions &= ~PlayerPermissions.FriendlyFireDetectorImmunity;
 		}
 
-		if ( CurrentGamemode == Gamemode.Randomizer && totalalive > 1 )
+		if ( CurrentGamemode == Gamemode.Randomizer && totalAlive > 1 )
 		{
 			// Prevents randomizer round from ending if everyone is on the same team
 			ev.IsAllowed = false;
@@ -337,10 +337,10 @@ public class EventHandlers
 	public void OnGrenadeThrown( ThrownProjectileEventArgs ev )
 	{
 		// Increase size and decrease fuse time of dodgeballs
-		if ( CurrentGamemode == Gamemode.Dodgeball && ev.Projectile.ProjectileType == ProjectileType.Scp018 )
+		if ( CurrentGamemode == Gamemode.Dodgeball && ev.Projectile is Scp018Projectile scp018 )
 		{
-			ev.Projectile.Scale *= 3;
-			( ev.Projectile as Scp018Projectile ).FuseTime = 1;
+			scp018.Scale *= 3;
+			scp018.FuseTime = 1;
 			ev.Player.AddItem( ItemType.SCP018 );
 		}
 	}
