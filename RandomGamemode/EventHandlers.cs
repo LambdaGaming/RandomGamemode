@@ -24,7 +24,8 @@ enum Gamemode
 	AnnoyingMimicry,
 	LockedIn,
 	Infection,
-	LivingLikeLarry
+	LivingLikeLarry,
+	TroubleInLightContainment
 }
 
 public class EventHandlers
@@ -50,6 +51,7 @@ public class EventHandlers
 			case Gamemode.LockedIn: Timing.RunCoroutine( LockedIn() ); break;
 			case Gamemode.Infection: Timing.RunCoroutine( Infection() ); break;
 			case Gamemode.LivingLikeLarry: Timing.RunCoroutine( LivingLikeLarry() ); break;
+			case Gamemode.TroubleInLightContainment: Timing.RunCoroutine( TroubleInLightContainment() ); break;
 		}
 		Map.Broadcast( 6, string.Format( plugin.Config.StartText, Plugin.GetGamemodeName( CurrentGamemode ) ) );
 	}
@@ -276,6 +278,53 @@ public class EventHandlers
 		Map.Broadcast( 15, plugin.Config.LivingLikeLarryText );
 		Respawn.PauseWaves();
 	}
+
+	public IEnumerator<float> TroubleInLightContainment()
+	{
+		yield return Timing.WaitForSeconds( 3f );
+		List<Door> doors = [];
+		foreach ( Door door in Door.List )
+		{
+			if ( door.Zone == ZoneType.LightContainment )
+			{
+				doors.Add( door );
+				door.IsOpen = true;
+				if ( door.IsCheckpoint )
+					door.Lock( DoorLockType.NoPower );
+			}
+		}
+
+		List<ItemType> weps = [
+			ItemType.Ammo12gauge, ItemType.Ammo44cal, ItemType.Ammo556x45, ItemType.Ammo762x39, ItemType.Ammo9x19,
+			ItemType.GrenadeFlash, ItemType.GrenadeHE, ItemType.GunA7, ItemType.GunAK, ItemType.GunCOM15, ItemType.GunCOM18,
+			ItemType.GunCom45, ItemType.GunCrossvec, ItemType.GunE11SR, ItemType.GunFRMG0, ItemType.GunFSP9, ItemType.GunLogicer,
+			ItemType.GunRevolver, ItemType.GunSCP127, ItemType.GunShotgun, ItemType.Jailbird
+		];
+		foreach ( Player ply in Player.List )
+		{
+			if ( ply.IsScp )
+			{
+				ply.Role.Set( RoleTypeId.Scp3114 );
+			}
+			else
+			{
+				ply.Role.Set( RoleTypeId.ClassD );
+				ply.Position = doors.RandomItem().Position + ( Vector3.up * 2 );
+			}
+
+			for ( int i = 0; i < 3; i++ )
+				ply.AddItem( weps.RandomItem() );
+		}
+
+		foreach ( Door ev in Door.List.Where( ( door ) => door.IsElevator ) )
+		{
+			ev.IsOpen = false;
+			ev.Lock( DoorLockType.NoPower );
+		}
+		yield return Timing.WaitForSeconds( 5f );
+		Map.Broadcast( 15, plugin.Config.TroubleInLightContainmentText );
+		Respawn.PauseWaves();
+	}
 #endregion
 
 #region Events
@@ -322,7 +371,7 @@ public class EventHandlers
 		}
 	}
 
-	public void OnRoundEnd()
+	public void OnRoundEnd( RoundEndedEventArgs ev )
 	{
 		// Broadcast that the gamemode has ended
 		if ( CurrentGamemode > 0 )
@@ -404,6 +453,11 @@ public class EventHandlers
 				ev.Player.MaxHealth = 400;
 				ev.Player.Health = 400;
 			} );
+		}
+		else if ( CurrentGamemode == Gamemode.TroubleInLightContainment )
+		{
+			if ( ev.Attacker?.IsScp is true )
+				ev.Attacker.EnableEffect( EffectType.Invisible, duration: 20 );
 		}
 	}
 

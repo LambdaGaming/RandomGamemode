@@ -83,4 +83,11 @@ public sealed class Config : IConfig
 
 	[Description( "Instructions that appear at the beginning of a Living Like Larry round. Should be less than 250 characters." )]
 	public string LivingLikeLarryText { get; set; } = "Class Ds must escape the hoard of SCP-106s and become Chaos Insurgency!";
+
+
+	[Description( "Enable/disable the Trouble in Light Containment gamemode." )]
+	public bool TroubleInLightContainmentEnabled { get; set; } = true;
+
+	[Description( "Instructions that appear at the beginning of a Trouble in Light Containment round. Should be less than 250 characters." )]
+	public string TroubleInLightContainmentText { get; set; } = "Class Ds must find and kill the disguised SCPs!";
 }

@@ -4,6 +4,7 @@
 ## Dodgeball
 - Players spawn as either Class D, Scientist, or Guard on the surface at the MTF spawn
 - Everyone gets unlimited SCP-018s with shortened fuse times
+- Friendly fire is enabled; The last player standing is the winner
 
 ## Peanut Raid
 - All SCPs are switched to Class D's, everyone else is switched to SCP-173
@@ -49,6 +50,12 @@
 - All SCPs are switched to Class D, everyone else is switched to SCP-106
 - SCP-106's spawn at the top of 173's old spawn room, Class D's spawn at the bottom
 - Class D's start with an O5 keycard, and must escape and become Chaos while being chased by the hoard of Larry's
+
+## Trouble in Light Containment
+- All SCPs are switched to SCP-3114, everyone else is switched to Class D and spawned with weapons in a random location in Light Containment
+- All doors in light containment are open and the elevators to heavy containment are disabled
+- Class Ds must identify and kill the imposters before they are killed themselves
+- SCP-3114 gets temporary invisibility after killing a player
 
 # Commands
 ## forcegamemode

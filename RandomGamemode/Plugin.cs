@@ -7,8 +7,8 @@ namespace RandomGamemode;
 public class Plugin : Plugin<Config>
 {
 	private EventHandlers EventHandlers;
-	public override Version Version { get; } = new Version( 2, 7, 4 );
-	public override Version RequiredExiledVersion { get; } = new Version( 9, 12, 0 );
+	public override Version Version { get; } = new Version( 2, 8, 0 );
+	public override Version RequiredExiledVersion { get; } = new Version( 9, 15, 0 );
 	public override string Author { get; } = "OPGman";
 	public override PluginPriority Priority { get; } = PluginPriority.Medium;
 
@@ -28,6 +28,7 @@ public class Plugin : Plugin<Config>
 			case Gamemode.LockedIn: return "Locked In";
 			case Gamemode.Infection: return "Infection";
 			case Gamemode.LivingLikeLarry: return "Living Like Larry";
+			case Gamemode.TroubleInLightContainment: return "Trouble in Light Containment";
 			default: return "Invalid Gamemode";
 		}
 	}
@@ -67,6 +68,8 @@ public class Plugin : Plugin<Config>
 			EnabledList.Add( Gamemode.Infection );
 		if ( Config.LivingLikeLarryEnabled )
 			EnabledList.Add( Gamemode.LivingLikeLarry );
+		if ( Config.TroubleInLightContainmentEnabled )
+			EnabledList.Add( Gamemode.TroubleInLightContainment );
 	}
 
 	public override void OnDisabled()
